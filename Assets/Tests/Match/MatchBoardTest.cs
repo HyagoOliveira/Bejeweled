@@ -44,6 +44,15 @@ namespace Bejeweled.Tests.Macth
         private void CreateLevelSettings()
         {
             levelSettings = ScriptableObject.CreateInstance<MatchLevelSettings>();
+            levelSettings.boardSize = Vector2Int.one * 8;
+            levelSettings.pieces = new GameObject[]
+            {
+                TestUtility.FindPrefab("BlueGem"),
+                TestUtility.FindPrefab("GreenGem"),
+                TestUtility.FindPrefab("OrangeGem"),
+                TestUtility.FindPrefab("WhiteGem"),
+                TestUtility.FindPrefab("YellowGem")
+            };
         }
 
         private void InstanciateBoardPrefab()
