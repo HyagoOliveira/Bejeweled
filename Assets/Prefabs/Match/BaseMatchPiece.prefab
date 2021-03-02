@@ -121,5 +121,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 27711b82f0c9f5e4c9fc0057881ab4f0, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  boxCollider: {fileID: 5332602017926755046}
   spriteRenderer: {fileID: 6892696443795220039}
   scorePoints: 1

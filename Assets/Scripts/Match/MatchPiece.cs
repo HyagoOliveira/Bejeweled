@@ -8,9 +8,12 @@ namespace Bejeweled.Macth
     /// <para>Use the <see cref="Place(Vector2Int, Vector2)"/> function to place it on the match board.</para>
     /// </summary>
     [DisallowMultipleComponent]
+    [RequireComponent(typeof(BoxCollider2D))]
     [RequireComponent(typeof(SpriteRenderer))]
     public sealed class MatchPiece : MonoBehaviour, IComparable, IEquatable<MatchPiece>
     {
+        [SerializeField, Tooltip("The local BoxCollider2D component.")]
+        private BoxCollider2D boxCollider;
         [SerializeField, Tooltip("The local SpriteRenderer component.")]
         private SpriteRenderer spriteRenderer;
         [SerializeField, Tooltip("The total Score points.")]
@@ -31,8 +34,18 @@ namespace Bejeweled.Macth
         /// </summary>
         public MatchBoard Board { get; private set; }
 
+        /// <summary>
+        /// The width and height of the piece.
+        /// </summary>
+        public Vector2 Size
+        {
+            get => boxCollider.size;
+            set => boxCollider.size = value;
+        }
+
         private void Reset()
         {
+            boxCollider = GetComponent<BoxCollider2D>();
             spriteRenderer = GetComponent<SpriteRenderer>();
         }
 
