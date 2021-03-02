@@ -9,24 +9,24 @@ namespace Bejeweled.Macth
     public sealed class MatchLevelSettings : ScriptableObject
     {
         [Header("Board")]
-        [SerializeField, Min(1), Tooltip("The number of rows for the level board.")]
-        private int rows = 8;
-        [SerializeField, Min(1), Tooltip("The number of columns for the level board.")]
-        private int columns = 8;
-
-        [Header("Tiles")]
-        [SerializeField, Tooltip("Match piece prefabs for this level.")]
-        private GameObject[] piecePrefabs = new GameObject[0];
+        [SerializeField, Tooltip("The total grid size for the level board.")]
+        private Vector2Int boardSize = Vector2Int.one * 8;
+        [SerializeField, Tooltip("The piece prefabs available for this level.")]
+        private GameObject[] pieces = new GameObject[0];
 
         /// <summary>
-        /// The board size based on the current 
-        /// <see cref="rows"/> and <see cref="columns"/>.
+        /// The total grid size for the level board
         /// </summary>
-        public Vector2Int BoardSize => new Vector2Int(columns, rows);
+        public Vector2Int BoardSize => boardSize;
 
         /// <summary>
-        /// Match piece prefabs for this level.
+        /// The piece prefabs available for this level.
         /// </summary>
-        public GameObject[] PiecePrefabs => piecePrefabs;
+        public GameObject[] Pieces => pieces;
+
+        /// <summary>
+        /// The pieces count available for this level.
+        /// </summary>
+        public int PiecesCount => Pieces.Length;
     }
 }
