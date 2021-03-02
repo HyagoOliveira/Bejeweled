@@ -1,8 +1,8 @@
 ﻿using UnityEngine;
 using NUnit.Framework;
-using Bejeweled.Tests;
+using Bejeweled.Macth;
 
-namespace Bejeweled.Macth.Tests
+namespace Bejeweled.Tests.Macth
 {
     public class MatchBoardTest
     {
