@@ -1,6 +1,6 @@
 ﻿using UnityEngine;
-using UnityEditor;
 using NUnit.Framework;
+using Bejeweled.Tests;
 
 namespace Bejeweled.Macth.Tests
 {
@@ -48,8 +48,8 @@ namespace Bejeweled.Macth.Tests
 
         private void InstanciateBoardPrefab()
         {
-            const string path = "Assets/Prefabs/Match/MatchBoard.prefab";
-            var boardPrefab = PrefabUtility.LoadPrefabContents(path);
+            const string prefabName = "MatchBoard";
+            var boardPrefab = TestUtility.FindPrefab(prefabName);
             board = Object.Instantiate(boardPrefab).GetComponent<MatchBoard>();
         }
     }
