@@ -12,6 +12,11 @@ namespace Bejeweled.Macth
         private readonly Dictionary<int, MatchPiece> prefabPieces = new Dictionary<int, MatchPiece>();
 
         /// <summary>
+        /// The total pieces count.
+        /// </summary>
+        public int PiecesCount => prefabPieces.Count;
+
+        /// <summary>
         /// Initializes the manager.
         /// </summary>
         /// <param name="prefabs">A prefab array where each GameObject contains a <see cref="MatchPiece"/> component attached on it.</param>
