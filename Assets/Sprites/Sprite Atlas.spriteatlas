@@ -31,21 +31,27 @@ SpriteAtlas:
     variantMultiplier: 1
     packables:
     - {fileID: 102900000, guid: b5872acb807359c409b65ff9ce66c361, type: 3}
+    - {fileID: 102900000, guid: f9c70ea74ff1cfc46b5f9df66c3862ea, type: 3}
+    - {fileID: 102900000, guid: 66ebe0ccd0103834cb3b8f5a70d261aa, type: 3}
     bindAsDefault: 1
   m_MasterAtlas: {fileID: 0}
   m_PackedSprites:
+  - {fileID: 21300000, guid: 555d88515822b9143b23641074f97314, type: 3}
   - {fileID: 21300000, guid: 4bed3db16b694844991bea4b5a781514, type: 3}
   - {fileID: 21300000, guid: 51828e07f5d651c42addbba77ba2e90c, type: 3}
   - {fileID: 21300000, guid: d6117f18040f8454bafbb3879ab90f31, type: 3}
   - {fileID: 21300000, guid: 8d441cccdf9de944b8dd8cc5b1aab68a, type: 3}
+  - {fileID: 21300000, guid: dd226dfcd8edc1c409a051eeb64d2ec8, type: 3}
   - {fileID: 21300000, guid: 1f59aafdfcf8f3347bf0ceb7dfa6afd8, type: 3}
   - {fileID: 21300000, guid: edfdc1ce69d68b148bf07332d06ac962, type: 3}
   - {fileID: 21300000, guid: 5c10eb6ff4dc69d46bf5276317e531d4, type: 3}
   m_PackedSpriteNamesToIndex:
+  - BoardSelection
   - Gem Green
   - Gem Blue
   - Gem Pink
   - Gem Orange
+  - Sparkle
   - Gem Yellow
   - Gem Red
   - Gem Violet
