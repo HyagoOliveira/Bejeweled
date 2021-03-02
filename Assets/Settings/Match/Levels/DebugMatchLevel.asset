@@ -12,9 +12,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: ede684b2d0e9c3d46887d5ad33e42cf6, type: 3}
   m_Name: DebugMatchLevel
   m_EditorClassIdentifier: 
-  rows: 8
-  columns: 8
-  piecePrefabs:
+  boardSize: {x: 8, y: 8}
+  pieces:
   - {fileID: 2907474482749137450, guid: e676dfd7eac85c54daa5c82de70b07a7, type: 3}
   - {fileID: 4019917551617381550, guid: a4784dde74d24b9409b13562cf0bd09b, type: 3}
   - {fileID: 1620213370813087482, guid: 199f21a483c53be43baa649661df6fd0, type: 3}
