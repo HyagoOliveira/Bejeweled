@@ -26,6 +26,11 @@ namespace Bejeweled.Macth
         /// </summary>
         public Vector2Int BoardPosition { get; private set; }
 
+        /// <summary>
+        /// The board this piece belongs to.
+        /// </summary>
+        public MatchBoard Board { get; private set; }
+
         private void Reset()
         {
             spriteRenderer = GetComponent<SpriteRenderer>();
@@ -91,6 +96,12 @@ namespace Bejeweled.Macth
 
             UpdateGameObjectName();
         }
+
+        /// <summary>
+        /// Sets the board.
+        /// </summary>
+        /// <param name="board">The board this piece belongs to.</param>
+        internal void SetBoard(MatchBoard board) => Board = board;
 
         private void UpdateGameObjectName()
             => gameObject.name = $"{BoardPosition}\t{PrefabName}";

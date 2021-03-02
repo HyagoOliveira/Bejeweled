@@ -76,6 +76,7 @@ namespace Bejeweled.Macth
                     };
 
                     Board[x, y] = PieceManager.InstantiateRandomPieceWithoutIds(pieces, invalidPieceIds);
+                    Board[x, y].SetBoard(this);
                     Board[x, y].Place(boardPosition, localPosition);
                 }
             }
