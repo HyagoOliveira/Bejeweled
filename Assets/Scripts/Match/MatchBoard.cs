@@ -160,8 +160,8 @@ namespace Bejeweled.Macth
         /// <returns>A piece instance or null if the given position is outside the board.</returns>
         public MatchPiece GetPieceAt(int x, int y)
         {
-            var validHorzPos = x > 0 && x < levelSettings.BoardSize.x;
-            var validVertPos = y > 0 && y < levelSettings.BoardSize.y;
+            var validHorzPos = x >= 0 && x < levelSettings.BoardSize.x;
+            var validVertPos = y >= 0 && y < levelSettings.BoardSize.y;
             var validBoardPos = validHorzPos && validVertPos;
             return validBoardPos ? Board[x, y] : null;
         }
