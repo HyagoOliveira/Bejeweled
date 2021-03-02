@@ -5,7 +5,7 @@ namespace Bejeweled.Macth
     /// <summary>
     /// Component responsible for creating and managing the Match Board.
     /// </summary>
-	[DisallowMultipleComponent]
+    [DisallowMultipleComponent]
     [RequireComponent(typeof(SpriteRenderer))]
     public sealed class MatchBoard : MonoBehaviour
     {
@@ -58,8 +58,8 @@ namespace Bejeweled.Macth
         /// <param name="level">The level settings asset used to create this board.</param>
         public void Initialize(MatchLevelSettings level)
         {
-            Board = new MatchPiece[level.BoardSize.x, level.BoardSize.y];
-            PieceManager = new MatchPieceManager(level.Pieces);
+            Board = new MatchPiece[level.boardSize.x, level.boardSize.y];
+            PieceManager = new MatchPieceManager(level.pieces);
 
             ResizeSpriteTile();
             Populate();
@@ -160,8 +160,8 @@ namespace Bejeweled.Macth
         /// <returns>A piece instance or null if the given position is outside the board.</returns>
         public MatchPiece GetPieceAt(int x, int y)
         {
-            var validHorzPos = x >= 0 && x < levelSettings.BoardSize.x;
-            var validVertPos = y >= 0 && y < levelSettings.BoardSize.y;
+            var validHorzPos = x >= 0 && x < levelSettings.boardSize.x;
+            var validVertPos = y >= 0 && y < levelSettings.boardSize.y;
             var validBoardPos = validHorzPos && validVertPos;
             return validBoardPos ? Board[x, y] : null;
         }

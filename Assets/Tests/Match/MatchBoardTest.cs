@@ -27,7 +27,7 @@ namespace Bejeweled.Tests.Macth
         public void Board_WhenCreated_HasSameSizeFromLevelSettings()
         {
             var actualSize = board.GetSize();
-            var expectedSize = levelSettings.BoardSize;
+            var expectedSize = levelSettings.boardSize;
 
             Assert.AreEqual(expectedSize, actualSize);
         }
