@@ -22,9 +22,24 @@ namespace Bejeweled.Macth
         public MatchPiece[,] Board { get; private set; }
 
         /// <summary>
+        /// The board first selected piece.
+        /// </summary>
+        public MatchPiece FirstPieceSelected { get; private set; }
+
+        /// <summary>
+        /// The board second selected piece.
+        /// </summary>
+        public MatchPiece SecondPieceSelected { get; private set; }
+
+        /// <summary>
         /// The manager used to populate this board.
         /// </summary>
         public MatchPieceManager PieceManager { get; private set; }
+
+        /// <summary>
+        /// Is able to select pieces in this board?
+        /// </summary>
+        public bool CanSelectPieces { get; private set; }
 
         private void Reset()
         {
@@ -56,7 +71,9 @@ namespace Bejeweled.Macth
         [ContextMenu("Repopulate Board")]
         public void Populate()
         {
+            DisablePieceSelection();
             RemoveAllPieces();
+
             var size = GetSize();
             var halfSize = size / 2;
             var bottomLeftPosition = GetCenterPosition() - halfSize;
@@ -80,6 +97,8 @@ namespace Bejeweled.Macth
                     Board[x, y].Place(boardPosition, localPosition);
                 }
             }
+
+            EnablePieceSelection();
         }
 
         /// <summary>
@@ -141,6 +160,60 @@ namespace Bejeweled.Macth
 
             return -1;
         }
+
+        /// <summary>
+        /// Enables the piece selection.
+        /// </summary>
+        public void EnablePieceSelection() => CanSelectPieces = true;
+
+        /// <summary>
+        /// Disable the piece selection.
+        /// </summary>
+        public void DisablePieceSelection() => CanSelectPieces = false;
+
+        /// <summary>
+        /// Selects the given piece.
+        /// </summary>
+        /// <param name="piece">A piece to select.</param>
+        public void SelectPiece(MatchPiece piece)
+        {
+            if (!HasFirstPieceSelected()) FirstPieceSelected = piece;
+            else if (!HasSecondPieceSelected())
+            {
+                DisablePieceSelection();
+                SecondPieceSelected = piece;
+            }
+        }
+
+        /// <summary>
+        /// Unselects the given piece.
+        /// </summary>
+        /// <param name="piece">A piece to unselect.</param>
+        public void UnselectPiece(MatchPiece piece)
+        {
+            if (piece.Equals(FirstPieceSelected))
+            {
+                EnablePieceSelection();
+                FirstPieceSelected = null;
+            }
+            else if (piece.Equals(SecondPieceSelected))
+            {
+                EnablePieceSelection();
+                SecondPieceSelected = null;
+            }
+        }
+
+        /// <summary>
+        /// Checks if the board first piece is selected.
+        /// </summary>
+        /// <returns>True if the board has the first piece selected. False otherwise.</returns>
+        public bool HasFirstPieceSelected() => FirstPieceSelected != null;
+
+        /// <summary>
+        /// Checks if the board second piece is selected.
+        /// </summary>
+        /// <returns>True if the board has the second piece selected. False otherwise.</returns>
+        public bool HasSecondPieceSelected() => SecondPieceSelected != null;
 
         private void ResizeSpriteTile()
         {

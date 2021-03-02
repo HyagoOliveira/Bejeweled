@@ -35,6 +35,20 @@ namespace Bejeweled.Macth
         public MatchBoard Board { get; private set; }
 
         /// <summary>
+        /// Rendering color for the piece sprite.
+        /// </summary>
+        public Color Color
+        {
+            get => spriteRenderer.color;
+            set => spriteRenderer.color = value;
+        }
+
+        /// <summary>
+        /// Is this piece current selected?
+        /// </summary>
+        public bool IsSelected { get; private set; }
+
+        /// <summary>
         /// The width and height of the piece.
         /// </summary>
         public Vector2 Size
@@ -48,6 +62,8 @@ namespace Bejeweled.Macth
             boxCollider = GetComponent<BoxCollider2D>();
             spriteRenderer = GetComponent<SpriteRenderer>();
         }
+
+        private void OnMouseDown() => ToggleSelection();
 
         /// <summary>
         /// Compares to other instances.
@@ -74,7 +90,11 @@ namespace Bejeweled.Macth
         /// </summary>
         /// <param name="other">The other piece to check.</param>
         /// <returns>Whether the other piece is the same.</returns>
-        public bool Equals(MatchPiece other) => GetId() == other.GetId();
+        public bool Equals(MatchPiece other)
+        {
+            var otherId = other ? other.GetId() : -1;
+            return GetId() == otherId;
+        }
 
         /// <summary>
         /// The current Score points.
@@ -108,6 +128,37 @@ namespace Bejeweled.Macth
             transform.localPosition = position + normalizedPivot;
 
             UpdateGameObjectName();
+        }
+
+        /// <summary>
+        /// Toggles this piece selection by selecting or unselecting it.
+        /// </summary>
+        public void ToggleSelection()
+        {
+            if (IsSelected) Unselect();
+            else Select();
+        }
+
+        /// <summary>
+        /// Selects this piece if possible.
+        /// </summary>
+        public void Select()
+        {
+            if (!Board.CanSelectPieces) return;
+
+            Color = Color.red;
+            IsSelected = true;
+            Board.SelectPiece(this);
+        }
+
+        /// <summary>
+        /// Unselect this piece.
+        /// </summary>
+        public void Unselect()
+        {
+            Color = Color.white;
+            IsSelected = false;
+            Board.UnselectPiece(this);
         }
 
         /// <summary>
