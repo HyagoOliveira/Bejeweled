@@ -145,20 +145,25 @@ namespace Bejeweled.Macth
         /// </summary>
         /// <param name="x">The horizontal board position.</param>
         /// <param name="y">The vertical board position.</param>
-        /// <returns>A piece id or -1 if the given position is invalid.</returns>
+        /// <returns>A piece id or -1 if the given position is outside the board.</returns>
         public int GetPieceIdAt(int x, int y)
+        {
+            var piece = GetPieceAt(x, y);
+            return piece ? piece.GetId() : -1;
+        }
+
+        /// <summary>
+        /// Returns the piece at the given position.
+        /// </summary>
+        /// <param name="x">The horizontal board position.</param>
+        /// <param name="y">The vertical board position.</param>
+        /// <returns>A piece instance or null if the given position is outside the board.</returns>
+        public MatchPiece GetPieceAt(int x, int y)
         {
             var validHorzPos = x > 0 && x < levelSettings.BoardSize.x;
             var validVertPos = y > 0 && y < levelSettings.BoardSize.y;
             var validBoardPos = validHorzPos && validVertPos;
-
-            if (validBoardPos)
-            {
-                var piece = Board[x, y];
-                return piece.GetId();
-            }
-
-            return -1;
+            return validBoardPos ? Board[x, y] : null;
         }
 
         /// <summary>
