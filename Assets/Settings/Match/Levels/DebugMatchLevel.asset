@@ -21,3 +21,4 @@ MonoBehaviour:
   - {fileID: 7217259547545393460, guid: 42798b2a1851561469ad23b834f5e16a, type: 3}
   totalScore: 50
   swapTime: 0.25
+  revertIfNoMatch: 0

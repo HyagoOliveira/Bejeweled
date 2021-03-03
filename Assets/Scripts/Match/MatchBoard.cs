@@ -307,15 +307,24 @@ namespace Bejeweled.Macth
 
             DisableSelector();
             DisablePieceSwap();
-            StartCoroutine(SwapPieces(SelectedPiece, piece));
-            UnselectPiece();
+            StartCoroutine(CheckMatch(piece));
+        }
 
-            StartCoroutine(CheckMatchesAndFillThem());
+        private IEnumerator CheckMatch(MatchPiece piece)
+        {
+            yield return SwapPieces(SelectedPiece, piece);
+            var matchedPieces = GetMatchedPieces(out bool wasMatch);
+            var revertMove = levelSettings.revertIfNoMatch && !wasMatch;
+            if (revertMove) yield return SwapPieces(piece, SelectedPiece);
+            UnselectPiece();
+            //yield return CheckMatchesAndFillThem();
+            yield return new WaitForSeconds(0.1f);
+            EnablePieceSwap();
         }
 
         private IEnumerator CheckMatchesAndFillThem()
         {
-            var matchedPieces = GetMatchedPieces();
+            var matchedPieces = GetMatchedPieces(out bool hasMatch);
 
             yield return new WaitForSeconds(0.2f);
             ComputerScore(matchedPieces);
@@ -326,8 +335,7 @@ namespace Bejeweled.Macth
             yield return new WaitForSeconds(0.2f);
             Destroy(matchedPieces);
 
-            yield return new WaitForSeconds(0.2f);
-            EnablePieceSwap();
+
         }
 
         private void ComputerScore(HashSet<MatchPiece> matchedPieces)
@@ -368,7 +376,7 @@ namespace Bejeweled.Macth
             }
         }
 
-        private HashSet<MatchPiece> GetMatchedPieces()
+        private HashSet<MatchPiece> GetMatchedPieces(out bool hasMatch)
         {
             var size = GetSize();
             var matchedPieces = new HashSet<MatchPiece>();
@@ -396,6 +404,7 @@ namespace Bejeweled.Macth
                 }
             }
 
+            hasMatch = matchedPieces.Count > 0;
             return matchedPieces;
         }
 
