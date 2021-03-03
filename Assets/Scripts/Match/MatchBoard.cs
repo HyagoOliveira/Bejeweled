@@ -1,5 +1,5 @@
 ﻿using UnityEngine;
-using System;
+using System.Collections;
 using System.Collections.Generic;
 
 namespace Bejeweled.Macth
@@ -36,14 +36,14 @@ namespace Bejeweled.Macth
         public bool CanSwapPieces { get; private set; }
 
         /// <summary>
-        /// The current selected pieace at this board.
+        /// The current selected piece at this board.
         /// </summary>
         public MatchPiece SelectedPiece { get; private set; }
 
         /// <summary>
         /// Action executed every time a match is done and the score increases.
         /// </summary>
-        public Action<int> OnIncreaseScore { get; set; }
+        public System.Action<int> OnIncreaseScore { get; set; }
 
         private void Reset()
         {
@@ -301,17 +301,71 @@ namespace Bejeweled.Macth
 
             DisableSelector();
             DisablePieceSwap();
-            SwapPieces(SelectedPiece, piece);
             //TODO waiter to swap pieces
-            CheckMatches();
+            SwapPieces(SelectedPiece, piece);
             UnselectPiece();
+
+            StartCoroutine(CheckMatchesAndFillThem());
+        }
+
+        private IEnumerator CheckMatchesAndFillThem()
+        {
+            var matchedPieces = GetMatchedPieces();
+
+            yield return new WaitForSeconds(0.2f);
+            ComputerScore(matchedPieces);
+
+            yield return new WaitForSeconds(0.2f);
+            FillTopPieces(matchedPieces);
+
+            yield return new WaitForSeconds(0.2f);
+            Destroy(matchedPieces);
+
+            yield return new WaitForSeconds(0.2f);
             EnablePieceSwap();
         }
 
-        private void CheckMatches()
+        private void ComputerScore(HashSet<MatchPiece> matchedPieces)
+        {
+            var totalScore = 0;
+            foreach (var piece in matchedPieces)
+            {
+                totalScore += piece.GetPoints();
+            }
+
+            var hasScore = totalScore > 0;
+            if (hasScore) OnIncreaseScore?.Invoke(totalScore);
+        }
+
+        private void FillTopPieces(HashSet<MatchPiece> matchedPieces)
+        {
+            var rows = GetHeight();
+            foreach (var piece in matchedPieces)
+            {
+                var x = piece.BoardPosition.x;
+                for (int y = piece.BoardPosition.y + 1; y < rows; y++)
+                {
+                    var currentPiece = GetPieceAt(x, y);
+                    if (currentPiece == null) continue;
+
+                    var bottomPosition = new Vector2Int(x, y - 1);
+                    SetPieceAt(bottomPosition, currentPiece);
+                }
+            }
+        }
+
+        private void Destroy(HashSet<MatchPiece> matchedPieces)
+        {
+            foreach (var piece in matchedPieces)
+            {
+                //TODO add animation before destroy it.
+                Destroy(piece.gameObject);
+            }
+        }
+
+        private HashSet<MatchPiece> GetMatchedPieces()
         {
             var size = GetSize();
-            var totalScore = 0;
             var matchedPieces = new HashSet<MatchPiece>();
 
             for (int y = 0; y < size.y; y++)
@@ -337,15 +391,7 @@ namespace Bejeweled.Macth
                 }
             }
 
-            foreach (var piece in matchedPieces)
-            {
-                totalScore += piece.GetPoints();
-                //TODO add animation before destroy it.
-                Destroy(piece.gameObject);
-            }
-
-            var hasScore = totalScore > 0;
-            if (hasScore) OnIncreaseScore?.Invoke(totalScore);
+            return matchedPieces;
         }
 
         private List<MatchPiece> FindVerticalMatches(Vector2Int boardPosition, MatchPiece piece, out bool wasMatch)
