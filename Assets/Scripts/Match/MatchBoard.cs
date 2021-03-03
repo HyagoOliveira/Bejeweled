@@ -1,4 +1,5 @@
 ﻿using UnityEngine;
+using System.Collections.Generic;
 
 namespace Bejeweled.Macth
 {
@@ -90,7 +91,7 @@ namespace Bejeweled.Macth
         /// </summary>
         /// <returns>Always a <see cref="Vector2Int"/> instance.</returns>
         public Vector2Int GetSize()
-            => new Vector2Int(Board.GetLength(0), Board.GetLength(1));
+            => new Vector2Int(GetWidth(), GetHeight());
 
         /// <summary>
         /// Returns the board sprite tiled size.
@@ -102,6 +103,10 @@ namespace Bejeweled.Macth
                 (int)spriteRenderer.size.x,
                 (int)spriteRenderer.size.y);
         }
+
+        public int GetWidth() => Board.GetLength(0);
+
+        public int GetHeight() => Board.GetLength(1);
 
         /// <summary>
         /// Returns the piece id at the given position.
@@ -289,9 +294,80 @@ namespace Bejeweled.Macth
             DisablePieceSwap();
             SwapPieces(SelectedPiece, piece);
             //TODO waiter to swap pieces
-            //TODO add match logic
+            CheckMatches();
             UnselectPiece();
             EnablePieceSwap();
+        }
+
+        private void CheckMatches()
+        {
+            var size = GetSize();
+            var matchedPieces = new HashSet<MatchPiece>();
+
+            for (int y = 0; y < size.y; y++)
+            {
+                for (int x = 0; x < size.x; x++)
+                {
+                    var boardPosition = new Vector2Int(x, y);
+                    var currentPiece = GetPieceAt(boardPosition);
+
+                    var vertMatches = FindVerticalMatches(boardPosition, currentPiece, out bool hasVertMatch);
+                    var horzMatches = FindHorizontalMatches(boardPosition, currentPiece, out bool hasHorzMatch);
+
+                    if (hasVertMatch)
+                    {
+                        matchedPieces.UnionWith(vertMatches);
+                        matchedPieces.Add(currentPiece);
+                    }
+                    if (hasHorzMatch)
+                    {
+                        matchedPieces.UnionWith(horzMatches);
+                        matchedPieces.Add(currentPiece);
+                    }
+                }
+            }
+
+            foreach (var piece in matchedPieces)
+            {
+                //TODO add animation before destroy it.
+                Destroy(piece.gameObject);
+            }
+        }
+
+        private List<MatchPiece> FindVerticalMatches(Vector2Int boardPosition, MatchPiece piece, out bool wasMatch)
+        {
+            var rows = GetHeight();
+            var matches = new List<MatchPiece>(capacity: rows);
+
+            for (int y = boardPosition.y + 1; y < rows; y++)
+            {
+                var currentPiece = GetPieceAt(boardPosition.x, y);
+                var noMatch = currentPiece == null || !currentPiece.Equals(piece);
+                if (noMatch) break;
+
+                matches.Add(currentPiece);
+            }
+
+            wasMatch = matches.Count > 1;
+            return matches;
+        }
+
+        private List<MatchPiece> FindHorizontalMatches(Vector2Int boardPosition, MatchPiece piece, out bool wasMatch)
+        {
+            var columns = GetWidth();
+            var matches = new List<MatchPiece>(capacity: columns);
+
+            for (int x = boardPosition.x + 1; x < columns; x++)
+            {
+                var currentPiece = GetPieceAt(x, boardPosition.y);
+                var noMatch = currentPiece == null || !currentPiece.Equals(piece);
+                if (noMatch) break;
+
+                matches.Add(currentPiece);
+            }
+
+            wasMatch = matches.Count > 1;
+            return matches;
         }
 
         private const string POPULATE_BOARD_CONTX_MENU_TITLE = "Populate Board";
