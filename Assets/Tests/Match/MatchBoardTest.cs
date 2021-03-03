@@ -67,6 +67,8 @@ namespace Bejeweled.Tests.Macth
             var rightfarPiecePosition = centerPiecePosition + Vector2Int.right * 2;
             var topmostPiecePosition = centerPiecePosition + Vector2Int.up;
             var topfarPiecePosition = centerPiecePosition + Vector2Int.up * 2;
+            var toprightmostPosition = centerPiecePosition + Vector2Int.one;
+            var toprightfarPosition = centerPiecePosition + Vector2Int.one * 2;
 
             var shouldBeAdjacent = board.IsAdjacentPosition(centerPiecePosition, rightmostPiecePosition);
             var shouldNotBeAdjacent = board.IsAdjacentPosition(centerPiecePosition, rightfarPiecePosition);
@@ -79,6 +81,12 @@ namespace Bejeweled.Tests.Macth
 
             Assert.IsTrue(shouldBeAdjacent, $"Piece position {centerPiecePosition} should be adjacent to {topmostPiecePosition}");
             Assert.IsFalse(shouldNotBeAdjacent, $"Piece position {centerPiecePosition} should not be adjacent to {topfarPiecePosition}");
+
+            shouldNotBeAdjacent = board.IsAdjacentPosition(centerPiecePosition, toprightmostPosition);
+            Assert.IsFalse(shouldNotBeAdjacent, $"Piece position {centerPiecePosition} should not be adjacent to {toprightmostPosition}");
+
+            shouldNotBeAdjacent = board.IsAdjacentPosition(centerPiecePosition, toprightfarPosition);
+            Assert.IsFalse(shouldNotBeAdjacent, $"Piece position {centerPiecePosition} should not be adjacent to {toprightfarPosition}");
         }
 
         [Test]

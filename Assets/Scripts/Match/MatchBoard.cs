@@ -238,8 +238,10 @@ namespace Bejeweled.Macth
         /// <returns>True if the given positions are adjacents. False otherwise.</returns>
         public bool IsAdjacentPosition(Vector2Int firstPosition, Vector2Int secondPosition)
         {
-            var isHorzAdjacent = firstPosition.x == secondPosition.x + 1 || firstPosition.x == secondPosition.x - 1;
-            var isVertAdjacent = firstPosition.y == secondPosition.y + 1 || firstPosition.y == secondPosition.y - 1;
+            var isSameLine = firstPosition.y == secondPosition.y;
+            var isSameColumn = firstPosition.x == secondPosition.x;
+            var isHorzAdjacent = isSameLine && (firstPosition.x == secondPosition.x + 1 || firstPosition.x == secondPosition.x - 1);
+            var isVertAdjacent = isSameColumn && (firstPosition.y == secondPosition.y + 1 || firstPosition.y == secondPosition.y - 1);
             return isHorzAdjacent || isVertAdjacent;
         }
 
