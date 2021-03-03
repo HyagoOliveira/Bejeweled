@@ -45,41 +45,16 @@ namespace Bejeweled.Macth
             spriteRenderer = GetComponent<SpriteRenderer>();
         }
 
-        private void Awake() => Initialize();
+        private void Awake() => Populate();
 
         /// <summary>
-        /// Populates the board using <see cref="PieceManager"/>
+        /// Populates the board using the given level settings asset.
         /// </summary>
-        [ContextMenu("Repopulate Board")]
-        public void Populate()
+        /// <param name="levelSettings">Level Settings used to populate the board.</param>
+        public void Populate(MatchLevelSettings levelSettings)
         {
-            DisablePieceSwap();
-            RemoveAllPieces();
-
-            var size = GetSize();
-            var bottomLeftPosition = GetBottomLeftPosition();
-
-            for (int y = 0; y < size.y; y++)
-            {
-                for (int x = 0; x < size.x; x++)
-                {
-                    var boardPosition = new Vector2Int(x, y);
-                    var localPosition = bottomLeftPosition + boardPosition;
-                    var invalidPieceIds = new int[]
-                    {
-                        GetPieceIdAt(x - 1, y), // Get the left piece id from the current position.
-                        GetPieceIdAt(x - 2, y), // Get the leftmost piece id from the current position.
-                        GetPieceIdAt(x, y - 1), // Get the bottom piece id from the current position.
-                        GetPieceIdAt(x, y - 2)  // Get the bottommost piece id from the current position.
-                    };
-
-                    Board[x, y] = PieceManager.InstantiateRandomPieceWithoutIds(piecesParent, invalidPieceIds);
-                    Board[x, y].SetBoard(this);
-                    Board[x, y].Place(boardPosition, localPosition);
-                }
-            }
-
-            EnablePieceSwap();
+            this.levelSettings = levelSettings;
+            Populate();
         }
 
         /// <summary>
@@ -282,16 +257,6 @@ namespace Bejeweled.Macth
             return isHorzAdjacent || isVertAdjacent;
         }
 
-        private void Initialize()
-        {
-            Board = new MatchPiece[levelSettings.boardSize.x, levelSettings.boardSize.y];
-            PieceManager = new MatchPieceManager(levelSettings.pieces);
-
-            DisableSelector();
-            ResizeSpriteTile();
-            Populate();
-        }
-
         private void ResizeSpriteTile()
         {
             spriteRenderer.drawMode = SpriteDrawMode.Tiled;
@@ -329,7 +294,47 @@ namespace Bejeweled.Macth
             EnablePieceSwap();
         }
 
-        [ContextMenu("Repopulate Board", isValidateFunction: true)]
+        private const string POPULATE_BOARD_CONTX_MENU_TITLE = "Populate Board";
+
+        [ContextMenu(POPULATE_BOARD_CONTX_MENU_TITLE)]
+        private void Populate()
+        {
+            Board = new MatchPiece[levelSettings.boardSize.x, levelSettings.boardSize.y];
+            PieceManager = new MatchPieceManager(levelSettings.pieces);
+
+            DisableSelector();
+            ResizeSpriteTile();
+            DisablePieceSwap();
+            RemoveAllPieces();
+
+            var size = GetSize();
+            var bottomLeftPosition = GetBottomLeftPosition();
+
+            for (int y = 0; y < size.y; y++)
+            {
+                for (int x = 0; x < size.x; x++)
+                {
+                    var boardPosition = new Vector2Int(x, y);
+                    var localPosition = bottomLeftPosition + boardPosition;
+                    var invalidPieceIds = new int[]
+                    {
+                        GetPieceIdAt(x - 1, y), // Gets the closest left piece id from the current position.
+                        GetPieceIdAt(x - 2, y), // Gets the further left piece id from the current position.
+                        GetPieceIdAt(x, y - 1), // Gets the closest bottom piece id from the current position.
+                        GetPieceIdAt(x, y - 2)  // Gets the further bottom piece id from the current position.
+                    };
+
+                    Board[x, y] = PieceManager.InstantiateRandomPieceWithoutIds(piecesParent, invalidPieceIds);
+                    Board[x, y].SetBoard(this);
+                    Board[x, y].Place(boardPosition, localPosition);
+                }
+            }
+
+            //TODO wait all pieces spawn animations.
+            EnablePieceSwap();
+        }
+
+        [ContextMenu(POPULATE_BOARD_CONTX_MENU_TITLE, isValidateFunction: true)]
         private bool IsPlayingMode() => Application.isPlaying;
     }
 }
