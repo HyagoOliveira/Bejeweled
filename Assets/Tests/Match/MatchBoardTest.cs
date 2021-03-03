@@ -59,6 +59,29 @@ namespace Bejeweled.Tests.Macth
         }
 
         [Test]
+        public void Board_Check_AdjacentPieces()
+        {
+            var halfSize = board.GetSize() / 2;
+            var centerPiecePosition = halfSize;
+            var rightmostPiecePosition = centerPiecePosition + Vector2Int.right;
+            var rightfarPiecePosition = centerPiecePosition + Vector2Int.right * 2;
+            var topmostPiecePosition = centerPiecePosition + Vector2Int.up;
+            var topfarPiecePosition = centerPiecePosition + Vector2Int.up * 2;
+
+            var shouldBeAdjacent = board.IsAdjacentPosition(centerPiecePosition, rightmostPiecePosition);
+            var shouldNotBeAdjacent = board.IsAdjacentPosition(centerPiecePosition, rightfarPiecePosition);
+
+            Assert.IsTrue(shouldBeAdjacent, $"Piece position {centerPiecePosition} should be adjacent to {rightmostPiecePosition}");
+            Assert.IsFalse(shouldNotBeAdjacent, $"Piece position {centerPiecePosition} should not be adjacent to {rightfarPiecePosition}");
+
+            shouldBeAdjacent = board.IsAdjacentPosition(centerPiecePosition, topmostPiecePosition);
+            shouldNotBeAdjacent = board.IsAdjacentPosition(centerPiecePosition, topfarPiecePosition);
+
+            Assert.IsTrue(shouldBeAdjacent, $"Piece position {centerPiecePosition} should be adjacent to {topmostPiecePosition}");
+            Assert.IsFalse(shouldNotBeAdjacent, $"Piece position {centerPiecePosition} should not be adjacent to {topfarPiecePosition}");
+        }
+
+        [Test]
         public void Board_WhenCreated_HasSamePieceCountFromLevelSettings()
         {
             var actualPiecesCount = board.PieceManager.PiecesCount;
