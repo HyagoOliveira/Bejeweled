@@ -14,7 +14,7 @@ namespace Bejeweled.Macth
         [SerializeField, Tooltip("The local SpriteRenderer component.")]
         private SpriteRenderer spriteRenderer;
         [SerializeField, Tooltip("The child Transform to hold all the board pieces.")]
-        private Transform pieces;
+        private Transform piecesParent;
         [SerializeField, Tooltip("The child Transform for the board selector.")]
         private Transform selector;
 
@@ -24,28 +24,23 @@ namespace Bejeweled.Macth
         public MatchPiece[,] Board { get; private set; }
 
         /// <summary>
-        /// The board first selected piece.
-        /// </summary>
-        public MatchPiece FirstPieceSelected { get; private set; }
-
-        /// <summary>
-        /// The board second selected piece.
-        /// </summary>
-        public MatchPiece SecondPieceSelected { get; private set; }
-
-        /// <summary>
         /// The manager used to populate this board.
         /// </summary>
         public MatchPieceManager PieceManager { get; private set; }
 
         /// <summary>
-        /// Is able to select pieces in this board?
+        /// Is able to swap pieces in this board?
         /// </summary>
-        public bool CanSelectPieces { get; private set; }
+        public bool CanSwapPieces { get; private set; }
+
+        /// <summary>
+        /// The current selected pieace at this board.
+        /// </summary>
+        public MatchPiece SelectedPiece { get; private set; }
 
         private void Reset()
         {
-            pieces = transform.Find("Pieces");
+            piecesParent = transform.Find("Pieces");
             selector = transform.Find("BoardSelector");
             spriteRenderer = GetComponent<SpriteRenderer>();
         }
@@ -58,7 +53,7 @@ namespace Bejeweled.Macth
         [ContextMenu("Repopulate Board")]
         public void Populate()
         {
-            DisablePieceSelection();
+            DisablePieceSwap();
             RemoveAllPieces();
 
             var size = GetSize();
@@ -78,13 +73,13 @@ namespace Bejeweled.Macth
                         GetPieceIdAt(x, y - 2)  // Get the bottommost piece id from the current position.
                     };
 
-                    Board[x, y] = PieceManager.InstantiateRandomPieceWithoutIds(pieces, invalidPieceIds);
+                    Board[x, y] = PieceManager.InstantiateRandomPieceWithoutIds(piecesParent, invalidPieceIds);
                     Board[x, y].SetBoard(this);
                     Board[x, y].Place(boardPosition, localPosition);
                 }
             }
 
-            EnablePieceSelection();
+            EnablePieceSwap();
         }
 
         /// <summary>
@@ -92,7 +87,7 @@ namespace Bejeweled.Macth
         /// </summary>
         public void RemoveAllPieces()
         {
-            var piecesComponents = pieces.GetComponentsInChildren<MatchPiece>(includeInactive: true);
+            var piecesComponents = piecesParent.GetComponentsInChildren<MatchPiece>(includeInactive: true);
             foreach (var piece in piecesComponents)
             {
                 Destroy(piece.gameObject);
@@ -102,13 +97,18 @@ namespace Bejeweled.Macth
         /// <summary>
         /// Returns the board center position.
         /// </summary>
-        /// <returns>Always a <see cref="Vector2Int"/> instance.</returns>
+        /// <returns>Always a <see cref="Vector2Int"/> position.</returns>
         public Vector2Int GetCenterPosition()
             => new Vector2Int(
                 (int)transform.localPosition.x,
                 (int)transform.localPosition.y);
 
-        public Vector2Int GetBottomLeftPosition() => GetCenterPosition() - GetSize() / 2;
+        /// <summary>
+        /// Returns the board bottom left position.
+        /// </summary>
+        /// <returns>Always a <see cref="Vector2Int"/> position.</returns>
+        public Vector2Int GetBottomLeftPosition()
+            => GetCenterPosition() - GetSize() / 2;
 
         /// <summary>
         /// Returns the board size.
@@ -121,7 +121,7 @@ namespace Bejeweled.Macth
         /// Returns the board sprite tiled size.
         /// </summary>
         /// <returns>Always a <see cref="Vector2Int"/> instance.</returns>
-        public Vector2Int GetSpriteTileSize()
+        public Vector2Int GetSpriteTiledSize()
         {
             return new Vector2Int(
                 (int)spriteRenderer.size.x,
@@ -141,6 +141,17 @@ namespace Bejeweled.Macth
         }
 
         /// <summary>
+        /// Returns the piece at the given board position.
+        /// </summary>
+        /// <param name="boardPosition">The board position.</param>
+        /// <returns>A piece instance or null if the given board position is outside the board.</returns>
+        public MatchPiece GetPieceAt(Vector2Int boardPosition)
+        {
+            if (boardPosition == null) return null;
+            return GetPieceAt(boardPosition.x, boardPosition.y);
+        }
+
+        /// <summary>
         /// Returns the piece at the given position.
         /// </summary>
         /// <param name="x">The horizontal board position.</param>
@@ -154,6 +165,11 @@ namespace Bejeweled.Macth
             return validBoardPos ? Board[x, y] : null;
         }
 
+        /// <summary>
+        /// Set the given piece at the board position.
+        /// </summary>
+        /// <param name="boardPosition">The board position.</param>
+        /// <param name="piece">The piece to set.</param>
         public void SetPieceAt(Vector2Int boardPosition, MatchPiece piece)
         {
             var position = GetBottomLeftPosition() + boardPosition;
@@ -162,133 +178,107 @@ namespace Bejeweled.Macth
         }
 
         /// <summary>
-        /// Enables the piece selection.
+        /// Enables the piece swap.
         /// </summary>
-        public void EnablePieceSelection() => CanSelectPieces = true;
+        public void EnablePieceSwap() => CanSwapPieces = true;
 
         /// <summary>
-        /// Disable the piece selection.
+        /// Disable the piece swap.
         /// </summary>
-        public void DisablePieceSelection() => CanSelectPieces = false;
-
-        public void EnableBoardSelector() => selector.gameObject.SetActive(true);
-
-        public void DisableBoardSelector() => selector.gameObject.SetActive(false);
+        public void DisablePieceSwap() => CanSwapPieces = false;
 
         /// <summary>
-        /// Selects the given piece.
+        /// Enable the board selector.
+        /// </summary>
+        public void EnableSelector() => selector.gameObject.SetActive(true);
+
+        /// <summary>
+        /// Disable the board selector.
+        /// </summary>
+        public void DisableSelector() => selector.gameObject.SetActive(false);
+
+        /// <summary>
+        /// Moves the board selector to the given piece board position.
+        /// </summary>
+        /// <param name="piece">The piece to move the selector.</param>
+        public void MoveSelectorToPiece(MatchPiece piece)
+        {
+            EnableSelector();
+            selector.position = piece.transform.position;
+        }
+
+        /// <summary>
+        /// Selects the given piece and execute all match logic.
         /// </summary>
         /// <param name="piece">A piece to select.</param>
         public void SelectPiece(MatchPiece piece)
         {
-            if (!CanSelectPieces) return;
-
-            if (!HasFirstPieceSelected()) SelectFirstPiece(piece);
-            else if (IsSameFirstPiece(piece)) UnselectFirstPiece();
-            else if (!HasSecondPieceSelected())
+            if (CanSwapPieces)
             {
-                var isAdjacent = IsAdjacentPosition(FirstPieceSelected.BoardPosition, piece.BoardPosition);
-                if (isAdjacent) SelectSecondPiece(piece);
-                else
-                {
-                    UnselectFirstPiece();
-                    SelectFirstPiece(piece);
-                }
+                if (HasSelectedPiece()) SelectAsSecondPiece(piece);
+                else SelectAsFirstPiece(piece);
             }
         }
 
         /// <summary>
-        /// Unselects the given piece.
+        /// Unselects the <see cref="SelectedPiece"/>.
         /// </summary>
-        /// <param name="piece">A piece to unselect.</param>
-        public void UnselectPiece(MatchPiece piece)
+        public void UnselectPiece()
         {
-            if (piece.Equals(FirstPieceSelected))
-            {
-                EnablePieceSelection();
-                FirstPieceSelected = null;
-            }
-            else if (piece.Equals(SecondPieceSelected))
-            {
-                EnablePieceSelection();
-                SecondPieceSelected = null;
-            }
+            DisableSelector();
+            SelectedPiece.Unselect();
+            SelectedPiece = null;
         }
-
-        public void SelectFirstPiece(MatchPiece piece)
-        {
-            MoveSelectorToPiece(piece);
-            FirstPieceSelected = piece;
-            FirstPieceSelected.Select();
-        }
-
-        public void UnselectFirstPiece()
-        {
-            DisableBoardSelector();
-            FirstPieceSelected.Unselect();
-            FirstPieceSelected = null;
-        }
-
-        public void SelectSecondPiece(MatchPiece piece)
-        {
-            DisableBoardSelector();
-            DisablePieceSelection();
-            SecondPieceSelected = piece;
-            SecondPieceSelected.Select();
-            SwapPieces(SecondPieceSelected, FirstPieceSelected);
-            //TODO add match logic
-            //TODO add waiter
-            UnselectFirstPiece();
-            UnselectSecondPiece();
-            EnablePieceSelection();
-        }
-
-        public void UnselectSecondPiece()
-        {
-            SecondPieceSelected.Unselect();
-            SecondPieceSelected = null;
-        }
-
-        public void MoveSelectorToPiece(MatchPiece piece)
-        {
-            selector.position = piece.transform.position;
-            EnableBoardSelector();
-        }
-
-        public void SwapPieces(MatchPiece firstPiece, MatchPiece secondPiece)
-        {
-            var secondPosition = secondPiece.BoardPosition;
-            SetPieceAt(firstPiece.BoardPosition, secondPiece);
-            SetPieceAt(secondPosition, firstPiece);
-        }
-
-        public bool IsSameFirstPiece(MatchPiece piece) => piece.Equals(FirstPieceSelected);
 
         /// <summary>
-        /// Checks if the board first piece is selected.
+        /// Swaps the given pieces.
         /// </summary>
-        /// <returns>True if the board has the first piece selected. False otherwise.</returns>
-        public bool HasFirstPieceSelected() => FirstPieceSelected != null;
+        /// <param name="piece">A piece to swap.</param>
+        /// <param name="otherPiece">A piece to swap.</param>
+        public void SwapPieces(MatchPiece piece, MatchPiece otherPiece)
+        {
+            var secondPosition = otherPiece.BoardPosition;
+            SetPieceAt(piece.BoardPosition, otherPiece);
+            SetPieceAt(secondPosition, piece);
+            //TODO add animation
+        }
 
         /// <summary>
-        /// Checks if the board second piece is selected.
+        /// Checks if the given piece is selected.
         /// </summary>
-        /// <returns>True if the board has the second piece selected. False otherwise.</returns>
-        public bool HasSecondPieceSelected() => SecondPieceSelected != null;
+        /// <param name="piece">The piece to check.</param>
+        /// <returns>True if the given piece is selected. False otherwise.</returns>
+        public bool IsSelectedPiece(MatchPiece piece) => piece.Equals(SelectedPiece);
+
+        /// <summary>
+        /// Checks if the board has a selected piece.
+        /// </summary>
+        /// <returns>True if the board has selected piece. False otherwise.</returns>
+        public bool HasSelectedPiece() => SelectedPiece != null;
+
+        /// <summary>
+        /// Checks if the given pieces are orthogonally adjacent, 
+        /// i.e. they are next to each other horizontally or vertically.
+        /// </summary>
+        /// <param name="piece">The first piece to check.</param>
+        /// <param name="otherPiece">The second piece to check.</param>
+        /// <returns>True if the given positions are adjacents to each other. False otherwise.</returns>
+        public bool IsAdjacentPieces(MatchPiece piece, MatchPiece otherPiece)
+            => IsAdjacentPosition(piece.BoardPosition, otherPiece.BoardPosition);
 
         /// <summary>
         /// Checks if the given positions are orthogonally adjacent, 
         /// i.e. they are next to each other horizontally or vertically.
         /// </summary>
-        /// <param name="firstPosition">The first position to check.</param>
-        /// <param name="secondPosition">The second position to check.</param>
-        /// <returns>True if the given positions are adjacents. False otherwise.</returns>
-        public bool IsAdjacentPosition(Vector2Int firstPosition, Vector2Int secondPosition)
+        /// <param name="boardPos">The first board position to check.</param>
+        /// <param name="otherBoardPos">The second board position to check.</param>
+        /// <returns>True if the given positions are adjacents to each other. False otherwise.</returns>
+        public bool IsAdjacentPosition(Vector2Int boardPos, Vector2Int otherBoardPos)
         {
-            var isSameLine = firstPosition.y == secondPosition.y;
-            var isSameColumn = firstPosition.x == secondPosition.x;
-            var isHorzAdjacent = isSameLine && (firstPosition.x == secondPosition.x + 1 || firstPosition.x == secondPosition.x - 1);
-            var isVertAdjacent = isSameColumn && (firstPosition.y == secondPosition.y + 1 || firstPosition.y == secondPosition.y - 1);
+            var isFromSameLine = boardPos.y == otherBoardPos.y;
+            var isFromSameColumn = boardPos.x == otherBoardPos.x;
+            var isHorzAdjacent = isFromSameLine && (boardPos.x == otherBoardPos.x + 1 || boardPos.x == otherBoardPos.x - 1);
+            var isVertAdjacent = isFromSameColumn && (boardPos.y == otherBoardPos.y + 1 || boardPos.y == otherBoardPos.y - 1);
             return isHorzAdjacent || isVertAdjacent;
         }
 
@@ -297,7 +287,7 @@ namespace Bejeweled.Macth
             Board = new MatchPiece[levelSettings.boardSize.x, levelSettings.boardSize.y];
             PieceManager = new MatchPieceManager(levelSettings.pieces);
 
-            DisableBoardSelector();
+            DisableSelector();
             ResizeSpriteTile();
             Populate();
         }
@@ -306,6 +296,37 @@ namespace Bejeweled.Macth
         {
             spriteRenderer.drawMode = SpriteDrawMode.Tiled;
             spriteRenderer.size = GetSize();
+        }
+
+        private void SelectAsFirstPiece(MatchPiece piece)
+        {
+            MoveSelectorToPiece(piece);
+            SelectedPiece = piece;
+            SelectedPiece.Select();
+        }
+
+        private void SelectAsSecondPiece(MatchPiece piece)
+        {
+            if (IsSelectedPiece(piece))
+            {
+                UnselectPiece();
+                return;
+            }
+
+            var shouldSelectAsFirstPiece = !IsAdjacentPieces(SelectedPiece, piece);
+            if (shouldSelectAsFirstPiece)
+            {
+                SelectAsFirstPiece(piece);
+                return;
+            }
+
+            DisableSelector();
+            DisablePieceSwap();
+            SwapPieces(SelectedPiece, piece);
+            //TODO waiter to swap pieces
+            //TODO add match logic
+            UnselectPiece();
+            EnablePieceSwap();
         }
 
         [ContextMenu("Repopulate Board", isValidateFunction: true)]

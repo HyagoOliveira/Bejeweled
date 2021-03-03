@@ -128,7 +128,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   levelSettings: {fileID: 11400000, guid: eb455ec74a782c348bb93430f35951ad, type: 2}
   spriteRenderer: {fileID: 7679713463973986982}
-  pieces: {fileID: 7679713462787400610}
+  piecesParent: {fileID: 7679713462787400610}
   selector: {fileID: 7440714498714680824}
 --- !u!1001 &1777465771471425489
 PrefabInstance:
