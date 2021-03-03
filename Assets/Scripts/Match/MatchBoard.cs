@@ -163,18 +163,29 @@ namespace Bejeweled.Macth
         /// </summary>
         public void DisablePieceSelection() => CanSelectPieces = false;
 
+        public void EnableBoardSelector() => selector.gameObject.SetActive(true);
+
+        public void DisableBoardSelector() => selector.gameObject.SetActive(false);
+
         /// <summary>
         /// Selects the given piece.
         /// </summary>
         /// <param name="piece">A piece to select.</param>
         public void SelectPiece(MatchPiece piece)
         {
+            if (!CanSelectPieces) return;
+
             if (!HasFirstPieceSelected()) SelectFirstPiece(piece);
+            else if (IsSameFirstPiece(piece)) UnselectFirstPiece();
             else if (!HasSecondPieceSelected())
             {
                 var isAdjacent = IsAdjacentPosition(FirstPieceSelected.BoardPosition, piece.BoardPosition);
                 if (isAdjacent) SelectSecondPiece(piece);
-                else SelectFirstPiece(piece);
+                else
+                {
+                    UnselectFirstPiece();
+                    SelectFirstPiece(piece);
+                }
             }
         }
 
@@ -196,26 +207,36 @@ namespace Bejeweled.Macth
             }
         }
 
-        public void MoveSelectorToPiece(MatchPiece piece)
-        {
-            selector.position = piece.transform.position;
-            EnableSelector(true);
-        }
-
-        public void EnableSelector(bool enabled) => selector.gameObject.SetActive(enabled);
-
         public void SelectFirstPiece(MatchPiece piece)
         {
             MoveSelectorToPiece(piece);
             FirstPieceSelected = piece;
+            FirstPieceSelected.Select();
+        }
+
+        public void UnselectFirstPiece()
+        {
+            DisableBoardSelector();
+            FirstPieceSelected.Unselect();
+            FirstPieceSelected = null;
         }
 
         public void SelectSecondPiece(MatchPiece piece)
         {
-            EnableSelector(false);
+            //TODO add match logic
+            DisableBoardSelector();
             DisablePieceSelection();
             SecondPieceSelected = piece;
+            SecondPieceSelected.Select();
         }
+
+        public void MoveSelectorToPiece(MatchPiece piece)
+        {
+            selector.position = piece.transform.position;
+            EnableBoardSelector();
+        }
+
+        public bool IsSameFirstPiece(MatchPiece piece) => piece.Equals(FirstPieceSelected);
 
         /// <summary>
         /// Checks if the board first piece is selected.
@@ -250,7 +271,7 @@ namespace Bejeweled.Macth
             Board = new MatchPiece[levelSettings.boardSize.x, levelSettings.boardSize.y];
             PieceManager = new MatchPieceManager(levelSettings.pieces);
 
-            EnableSelector(false);
+            DisableBoardSelector();
             ResizeSpriteTile();
             Populate();
         }

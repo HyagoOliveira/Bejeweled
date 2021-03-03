@@ -63,7 +63,7 @@ namespace Bejeweled.Macth
             spriteRenderer = GetComponent<SpriteRenderer>();
         }
 
-        private void OnMouseDown() => ToggleSelection();
+        private void OnMouseDown() => Board.SelectPiece(this);
 
         /// <summary>
         /// Compares to other instances.
@@ -131,33 +131,14 @@ namespace Bejeweled.Macth
         }
 
         /// <summary>
-        /// Toggles this piece selection by selecting or unselecting it.
-        /// </summary>
-        public void ToggleSelection()
-        {
-            if (IsSelected) Unselect();
-            else Select();
-        }
-
-        /// <summary>
         /// Selects this piece if possible.
         /// </summary>
-        public void Select()
-        {
-            if (!Board.CanSelectPieces) return;
-
-            IsSelected = true;
-            Board.SelectPiece(this);
-        }
+        public void Select() => IsSelected = true;
 
         /// <summary>
         /// Unselect this piece.
         /// </summary>
-        public void Unselect()
-        {
-            IsSelected = false;
-            Board.UnselectPiece(this);
-        }
+        public void Unselect() => IsSelected = false;
 
         /// <summary>
         /// Sets the board.
