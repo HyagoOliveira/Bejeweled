@@ -15,6 +15,8 @@ namespace Bejeweled.Macth
         private SpriteRenderer spriteRenderer;
         [SerializeField, Tooltip("The child Transform to hold all the board pieces.")]
         private Transform pieces;
+        [SerializeField, Tooltip("The child Transform for the board selector.")]
+        private Transform selector;
 
         /// <summary>
         /// The board grid array.
@@ -43,8 +45,9 @@ namespace Bejeweled.Macth
 
         private void Reset()
         {
-            spriteRenderer = GetComponent<SpriteRenderer>();
             pieces = transform.Find("Pieces");
+            selector = transform.Find("BoardSelector");
+            spriteRenderer = GetComponent<SpriteRenderer>();
         }
 
         private void Awake()
@@ -61,6 +64,7 @@ namespace Bejeweled.Macth
             Board = new MatchPiece[level.boardSize.x, level.boardSize.y];
             PieceManager = new MatchPieceManager(level.pieces);
 
+            EnableSelector(false);
             ResizeSpriteTile();
             Populate();
         }
@@ -182,9 +186,14 @@ namespace Bejeweled.Macth
         /// <param name="piece">A piece to select.</param>
         public void SelectPiece(MatchPiece piece)
         {
-            if (!HasFirstPieceSelected()) FirstPieceSelected = piece;
+            if (!HasFirstPieceSelected())
+            {
+                MoveSelectorToPiece(piece);
+                FirstPieceSelected = piece;
+            }
             else if (!HasSecondPieceSelected())
             {
+                EnableSelector(false);
                 DisablePieceSelection();
                 SecondPieceSelected = piece;
             }
@@ -207,6 +216,15 @@ namespace Bejeweled.Macth
                 SecondPieceSelected = null;
             }
         }
+
+        public void MoveSelectorToPiece(MatchPiece piece)
+        {
+            selector.position = piece.transform.position;
+            EnableSelector(true);
+        }
+
+        public void EnableSelector(bool enabled) => selector.gameObject.SetActive(enabled);
+
 
         /// <summary>
         /// Checks if the board first piece is selected.

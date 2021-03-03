@@ -146,7 +146,6 @@ namespace Bejeweled.Macth
         {
             if (!Board.CanSelectPieces) return;
 
-            Color = Color.red;
             IsSelected = true;
             Board.SelectPiece(this);
         }
@@ -156,7 +155,6 @@ namespace Bejeweled.Macth
         /// </summary>
         public void Unselect()
         {
-            Color = Color.white;
             IsSelected = false;
             Board.UnselectPiece(this);
         }
