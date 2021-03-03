@@ -62,8 +62,7 @@ namespace Bejeweled.Macth
             RemoveAllPieces();
 
             var size = GetSize();
-            var halfSize = size / 2;
-            var bottomLeftPosition = GetCenterPosition() - halfSize;
+            var bottomLeftPosition = GetBottomLeftPosition();
 
             for (int y = 0; y < size.y; y++)
             {
@@ -109,6 +108,8 @@ namespace Bejeweled.Macth
                 (int)transform.localPosition.x,
                 (int)transform.localPosition.y);
 
+        public Vector2Int GetBottomLeftPosition() => GetCenterPosition() - GetSize() / 2;
+
         /// <summary>
         /// Returns the board size.
         /// </summary>
@@ -151,6 +152,13 @@ namespace Bejeweled.Macth
             var validVertPos = y >= 0 && y < levelSettings.boardSize.y;
             var validBoardPos = validHorzPos && validVertPos;
             return validBoardPos ? Board[x, y] : null;
+        }
+
+        public void SetPieceAt(Vector2Int boardPosition, MatchPiece piece)
+        {
+            var position = GetBottomLeftPosition() + boardPosition;
+            Board[boardPosition.x, boardPosition.y] = piece;
+            Board[boardPosition.x, boardPosition.y].Place(boardPosition, position);
         }
 
         /// <summary>
@@ -223,17 +231,35 @@ namespace Bejeweled.Macth
 
         public void SelectSecondPiece(MatchPiece piece)
         {
-            //TODO add match logic
             DisableBoardSelector();
             DisablePieceSelection();
             SecondPieceSelected = piece;
             SecondPieceSelected.Select();
+            SwapPieces(SecondPieceSelected, FirstPieceSelected);
+            //TODO add match logic
+            //TODO add waiter
+            UnselectFirstPiece();
+            UnselectSecondPiece();
+            EnablePieceSelection();
+        }
+
+        public void UnselectSecondPiece()
+        {
+            SecondPieceSelected.Unselect();
+            SecondPieceSelected = null;
         }
 
         public void MoveSelectorToPiece(MatchPiece piece)
         {
             selector.position = piece.transform.position;
             EnableBoardSelector();
+        }
+
+        public void SwapPieces(MatchPiece firstPiece, MatchPiece secondPiece)
+        {
+            var secondPosition = secondPiece.BoardPosition;
+            SetPieceAt(firstPiece.BoardPosition, secondPiece);
+            SetPieceAt(secondPosition, firstPiece);
         }
 
         public bool IsSameFirstPiece(MatchPiece piece) => piece.Equals(FirstPieceSelected);
