@@ -1,4 +1,5 @@
 ﻿using UnityEngine;
+using System;
 using System.Collections.Generic;
 
 namespace Bejeweled.Macth
@@ -39,6 +40,11 @@ namespace Bejeweled.Macth
         /// </summary>
         public MatchPiece SelectedPiece { get; private set; }
 
+        /// <summary>
+        /// Action executed every time a match is done and the score increases.
+        /// </summary>
+        public Action<int> OnIncreaseScore { get; set; }
+
         private void Reset()
         {
             piecesParent = transform.Find("Pieces");
@@ -46,7 +52,10 @@ namespace Bejeweled.Macth
             spriteRenderer = GetComponent<SpriteRenderer>();
         }
 
-        private void Awake() => Populate();
+        private void Awake()
+        {
+            if (levelSettings) Populate();
+        }
 
         /// <summary>
         /// Populates the board using the given level settings asset.
@@ -302,6 +311,7 @@ namespace Bejeweled.Macth
         private void CheckMatches()
         {
             var size = GetSize();
+            var totalScore = 0;
             var matchedPieces = new HashSet<MatchPiece>();
 
             for (int y = 0; y < size.y; y++)
@@ -329,9 +339,13 @@ namespace Bejeweled.Macth
 
             foreach (var piece in matchedPieces)
             {
+                totalScore += piece.GetPoints();
                 //TODO add animation before destroy it.
                 Destroy(piece.gameObject);
             }
+
+            var hasScore = totalScore > 0;
+            if (hasScore) OnIncreaseScore?.Invoke(totalScore);
         }
 
         private List<MatchPiece> FindVerticalMatches(Vector2Int boardPosition, MatchPiece piece, out bool wasMatch)
