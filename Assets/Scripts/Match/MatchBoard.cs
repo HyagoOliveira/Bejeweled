@@ -169,16 +169,12 @@ namespace Bejeweled.Macth
         /// <param name="piece">A piece to select.</param>
         public void SelectPiece(MatchPiece piece)
         {
-            if (!HasFirstPieceSelected())
-            {
-                MoveSelectorToPiece(piece);
-                FirstPieceSelected = piece;
-            }
+            if (!HasFirstPieceSelected()) SelectFirstPiece(piece);
             else if (!HasSecondPieceSelected())
             {
-                EnableSelector(false);
-                DisablePieceSelection();
-                SecondPieceSelected = piece;
+                var isAdjacent = IsAdjacentPosition(FirstPieceSelected.BoardPosition, piece.BoardPosition);
+                if (isAdjacent) SelectSecondPiece(piece);
+                else SelectFirstPiece(piece);
             }
         }
 
@@ -207,6 +203,19 @@ namespace Bejeweled.Macth
         }
 
         public void EnableSelector(bool enabled) => selector.gameObject.SetActive(enabled);
+
+        public void SelectFirstPiece(MatchPiece piece)
+        {
+            MoveSelectorToPiece(piece);
+            FirstPieceSelected = piece;
+        }
+
+        public void SelectSecondPiece(MatchPiece piece)
+        {
+            EnableSelector(false);
+            DisablePieceSelection();
+            SecondPieceSelected = piece;
+        }
 
         /// <summary>
         /// Checks if the board first piece is selected.
