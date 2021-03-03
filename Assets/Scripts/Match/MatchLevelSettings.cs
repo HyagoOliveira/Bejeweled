@@ -14,6 +14,10 @@ namespace Bejeweled.Macth
         [Tooltip("The piece prefabs available for this level.")]
         public GameObject[] pieces = new GameObject[0];
 
+        [Header("Gameplay")]
+        [Min(1), Tooltip("Score necessary to go to next level.")]
+        public float totalScore = 50;
+
         /// <summary>
         /// The pieces count available for this level.
         /// </summary>
