@@ -17,6 +17,8 @@ namespace Bejeweled.Macth
         [Header("Gameplay")]
         [Min(1), Tooltip("Score necessary to go to next level.")]
         public float totalScore = 50;
+        [Min(0f), Tooltip("Time (in seconds) to swap between pieces.")]
+        public float swapTime = 0.25f;
 
         /// <summary>
         /// The pieces count available for this level.

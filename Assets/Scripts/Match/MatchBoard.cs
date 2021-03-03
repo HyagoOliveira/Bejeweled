@@ -1,6 +1,7 @@
 ﻿using UnityEngine;
 using System.Collections;
 using System.Collections.Generic;
+using DG.Tweening;
 
 namespace Bejeweled.Macth
 {
@@ -224,12 +225,17 @@ namespace Bejeweled.Macth
         /// </summary>
         /// <param name="piece">A piece to swap.</param>
         /// <param name="otherPiece">A piece to swap.</param>
-        public void SwapPieces(MatchPiece piece, MatchPiece otherPiece)
+        public IEnumerator SwapPieces(MatchPiece piece, MatchPiece otherPiece)
         {
+            var swapSequence = DOTween.Sequence().
+                Append(piece.transform.DOMove(otherPiece.transform.position, levelSettings.swapTime)).
+                Join(otherPiece.transform.DOMove(piece.transform.position, levelSettings.swapTime));
+
+            yield return swapSequence.WaitForCompletion();
+
             var secondPosition = otherPiece.BoardPosition;
             SetPieceAt(piece.BoardPosition, otherPiece);
             SetPieceAt(secondPosition, piece);
-            //TODO add animation
         }
 
         /// <summary>
@@ -301,8 +307,7 @@ namespace Bejeweled.Macth
 
             DisableSelector();
             DisablePieceSwap();
-            //TODO waiter to swap pieces
-            SwapPieces(SelectedPiece, piece);
+            StartCoroutine(SwapPieces(SelectedPiece, piece));
             UnselectPiece();
 
             StartCoroutine(CheckMatchesAndFillThem());
