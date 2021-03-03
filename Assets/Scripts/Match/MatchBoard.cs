@@ -50,24 +50,7 @@ namespace Bejeweled.Macth
             spriteRenderer = GetComponent<SpriteRenderer>();
         }
 
-        private void Awake()
-        {
-            Initialize(levelSettings);
-        }
-
-        /// <summary>
-        /// Initializes the board and populate it.
-        /// </summary>
-        /// <param name="level">The level settings asset used to create this board.</param>
-        public void Initialize(MatchLevelSettings level)
-        {
-            Board = new MatchPiece[level.boardSize.x, level.boardSize.y];
-            PieceManager = new MatchPieceManager(level.pieces);
-
-            EnableSelector(false);
-            ResizeSpriteTile();
-            Populate();
-        }
+        private void Awake() => Initialize();
 
         /// <summary>
         /// Populates the board using <see cref="PieceManager"/>
@@ -225,7 +208,6 @@ namespace Bejeweled.Macth
 
         public void EnableSelector(bool enabled) => selector.gameObject.SetActive(enabled);
 
-
         /// <summary>
         /// Checks if the board first piece is selected.
         /// </summary>
@@ -250,6 +232,16 @@ namespace Bejeweled.Macth
             var isHorzAdjacent = firstPosition.x == secondPosition.x + 1 || firstPosition.x == secondPosition.x - 1;
             var isVertAdjacent = firstPosition.y == secondPosition.y + 1 || firstPosition.y == secondPosition.y - 1;
             return isHorzAdjacent || isVertAdjacent;
+        }
+
+        private void Initialize()
+        {
+            Board = new MatchPiece[levelSettings.boardSize.x, levelSettings.boardSize.y];
+            PieceManager = new MatchPieceManager(levelSettings.pieces);
+
+            EnableSelector(false);
+            ResizeSpriteTile();
+            Populate();
         }
 
         private void ResizeSpriteTile()
