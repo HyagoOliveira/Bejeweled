@@ -4,11 +4,12 @@ using UnityEngine.UI;
 namespace Bejeweled.UI
 {
     /// <summary>
-    /// UI Score Bar component.
+    /// UI Slider Bar component.
+    /// <para>It requires a local <see cref="Slider"/> component.</para>
     /// </summary>
     [DisallowMultipleComponent]
     [RequireComponent(typeof(Slider))]
-    public class ScoreBar : MonoBehaviour
+    public class SliderBar : MonoBehaviour
     {
         [SerializeField, Tooltip("The local Slider component.")]
         private Slider slider;
@@ -20,9 +21,9 @@ namespace Bejeweled.UI
         private Gradient gradient;
 
         /// <summary>
-        /// The maximum score available.
+        /// The maximum bar value available.
         /// </summary>
-        public float MaxScore
+        public float MaxValue
         {
             get => slider.maxValue;
             set
@@ -33,9 +34,9 @@ namespace Bejeweled.UI
         }
 
         /// <summary>
-        /// The current score.
+        /// The current bar value.
         /// </summary>
-        public float CurrentScore
+        public float CurrentValue
         {
             get => slider.value;
             set
@@ -52,28 +53,28 @@ namespace Bejeweled.UI
         }
 
         /// <summary>
-        /// Initializes the bar using the given score as current and maximum score values.
+        /// Initializes the bar using the given value as the current and maximum values.
         /// </summary>
-        /// <param name="score">The score to initialize the bar.</param>
-        public void Initialize(float score) => Initialize(score, score);
+        /// <param name="value">The value to initialize the bar.</param>
+        public void Initialize(float value) => Initialize(value, value);
 
         /// <summary>
-        /// Initializes the bar using the given current and maximum score values.
+        /// Initializes the bar using the given current and maximum values.
         /// </summary>
-        /// <param name="current">The current score to initialize the bar.</param>
-        /// <param name="max">The maximum score to initialize the bar.</param>
+        /// <param name="current">The current value to initialize the bar.</param>
+        /// <param name="max">The maximum value to initialize the bar.</param>
         public void Initialize(float current, float max)
         {
-            MaxScore = max;
-            CurrentScore = current;
+            MaxValue = max;
+            CurrentValue = current;
         }
 
         /// <summary>
-        /// Returns the current gradient color according with <see cref="CurrentScore"/>.
+        /// Returns the current gradient color according with <see cref="CurrentValue"/>.
         /// </summary>
         /// <returns>Always a <see cref="Color"/>.</returns>
         public Color GetCurrentGradientColor() => gradient.Evaluate(slider.normalizedValue);
 
-        private void UpdateInfoText() => info.text = $"{CurrentScore:F0} / {MaxScore:F0}";
+        private void UpdateInfoText() => info.text = $"{CurrentValue:F0} / {MaxValue:F0}";
     }
 }
