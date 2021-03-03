@@ -238,6 +238,20 @@ namespace Bejeweled.Macth
         /// <returns>True if the board has the second piece selected. False otherwise.</returns>
         public bool HasSecondPieceSelected() => SecondPieceSelected != null;
 
+        /// <summary>
+        /// Checks if the given positions are orthogonally adjacent, 
+        /// i.e. they are next to each other horizontally or vertically.
+        /// </summary>
+        /// <param name="firstPosition">The first position to check.</param>
+        /// <param name="secondPosition">The second position to check.</param>
+        /// <returns>True if the given positions are adjacents. False otherwise.</returns>
+        public bool IsAdjacentPosition(Vector2Int firstPosition, Vector2Int secondPosition)
+        {
+            var isHorzAdjacent = firstPosition.x == secondPosition.x + 1 || firstPosition.x == secondPosition.x - 1;
+            var isVertAdjacent = firstPosition.y == secondPosition.y + 1 || firstPosition.y == secondPosition.y - 1;
+            return isHorzAdjacent || isVertAdjacent;
+        }
+
         private void ResizeSpriteTile()
         {
             spriteRenderer.drawMode = SpriteDrawMode.Tiled;
