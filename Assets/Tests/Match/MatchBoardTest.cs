@@ -106,7 +106,7 @@ namespace Bejeweled.Tests.Macth
             {
                 TestUtility.FindPrefab("BlueGem"),
                 TestUtility.FindPrefab("GreenGem"),
-                TestUtility.FindPrefab("OrangeGem"),
+                TestUtility.FindPrefab("VioletGem"),
                 TestUtility.FindPrefab("RedGem"),
                 TestUtility.FindPrefab("YellowGem")
             };
