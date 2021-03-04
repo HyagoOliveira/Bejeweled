@@ -267,7 +267,7 @@ namespace Bejeweled.Macth
                 SelectedPiece = piece;
                 StartCoroutine(CheckMatchesAndFillBoard(otherPiece));
             }
-            else piece.transform.DOShakePosition(0.25F, strength: 0.5F);
+            else piece.Shake();
         }
 
         /// <summary>
@@ -279,8 +279,8 @@ namespace Bejeweled.Macth
         {
             DisablePieceSwap();
             var swapSequence = DOTween.Sequence().
-                Append(piece.transform.DOMove(otherPiece.transform.position, levelSettings.swapTime)).
-                Join(otherPiece.transform.DOMove(piece.transform.position, levelSettings.swapTime));
+                Append(piece.Move(otherPiece.transform.position)).
+                Join(otherPiece.Move(piece.transform.position));
 
             yield return swapSequence.WaitForCompletion();
 
@@ -401,9 +401,7 @@ namespace Bejeweled.Macth
                 totalScore += piece.GetPoints();
                 //TODO play pop sound
                 //TODO add score number animation
-                yield return piece.transform.
-                    DOScale(0F, levelSettings.removeTime).
-                    WaitForCompletion();
+                yield return piece.ScaleDown();
             }
 
             foreach (var piece in matchedPieces)
@@ -433,9 +431,7 @@ namespace Bejeweled.Macth
                     var droppedWorldPosition = currentPiece.transform.position + Vector3.down * droppedRows;
 
                     //TODO play drop sound
-                    var dropDownAnimation = currentPiece.transform.
-                        DOMove(droppedWorldPosition, levelSettings.dropDownTime);
-                    yield return dropDownAnimation.WaitForCompletion();
+                    yield return currentPiece.DropDown(droppedWorldPosition);
                     SetPieceAt(droppedBoardPosition, currentPiece);
                     Board[boardPosition.x, boardPosition.y] = null;
                 }
@@ -443,15 +439,15 @@ namespace Bejeweled.Macth
 
             if (levelSettings.fillEmptySpots)
             {
-                yield return FillEmptySpots(levelSettings.spawnTime);
+                yield return FillEmptySpots();
             }
         }
 
-        private IEnumerator FillEmptySpots(float animationTime)
+        private IEnumerator FillEmptySpots(float spawnTime = 0.1F)
         {
             DisablePieceSwap();
             var size = GetSize();
-            var showAnimation = animationTime > 0F;
+            var showAnimation = spawnTime > 0F;
             var bottomLeftPosition = GetBottomLeftPosition();
 
             for (int y = 0; y < size.y; y++)
@@ -478,10 +474,8 @@ namespace Bejeweled.Macth
 
                     if (showAnimation)
                     {
-                        currentPiece.transform.localScale = Vector3.one * 2F;
-                        var spawnAnimation = currentPiece.transform.DOScale(1F, animationTime);
                         //TODO play spawn (pop) sound
-                        yield return spawnAnimation.WaitForCompletion();
+                        yield return currentPiece.Spawn(spawnTime);
                     }
                 }
             }

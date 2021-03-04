@@ -1,5 +1,6 @@
 ﻿using System;
 using UnityEngine;
+using DG.Tweening;
 
 namespace Bejeweled.Macth
 {
@@ -86,6 +87,17 @@ namespace Bejeweled.Macth
         }
 
         /// <summary>
+        /// Check if the given piece is the same.
+        /// </summary>
+        /// <param name="other">The other piece to check.</param>
+        /// <returns>Whether the other piece is the same.</returns>
+        public bool Equals(MatchPiece other)
+        {
+            var otherId = other ? other.GetId() : -1;
+            return GetId() == otherId;
+        }
+
+        /// <summary>
         /// Compares to other instances.
         /// <para>It's useful to sort as list of 
         /// <see cref="MatchPiece"/> using its points.</para>
@@ -106,28 +118,6 @@ namespace Bejeweled.Macth
         }
 
         /// <summary>
-        /// Check if the given piece is the same.
-        /// </summary>
-        /// <param name="other">The other piece to check.</param>
-        /// <returns>Whether the other piece is the same.</returns>
-        public bool Equals(MatchPiece other)
-        {
-            var otherId = other ? other.GetId() : -1;
-            return GetId() == otherId;
-        }
-
-        /// <summary>
-        /// The current Score points.
-        /// </summary>
-        /// <returns></returns>
-        public int GetPoints() => scorePoints;
-
-        /// <summary>
-        /// The unique id for this piece based on the current sprite.
-        /// </summary>
-        public int GetId() => spriteRenderer.sprite.GetInstanceID();
-
-        /// <summary>
         /// Compares using the current points.
         /// </summary>
         /// <param name="otherPiece">Other piece to compare.</param>
@@ -137,6 +127,17 @@ namespace Bejeweled.Macth
 
         public int CompareUsingHorizontalBoardPosition(MatchPiece otherPiece)
             => BoardPosition.x.CompareTo(otherPiece.BoardPosition.x);
+
+        /// <summary>
+        /// The unique id for this piece based on the current sprite.
+        /// </summary>
+        public int GetId() => spriteRenderer.sprite.GetInstanceID();
+
+        /// <summary>
+        /// The current Score points.
+        /// </summary>
+        /// <returns></returns>
+        public int GetPoints() => scorePoints;
 
         /// <summary>
         /// Places this piece using the given position.
@@ -152,6 +153,24 @@ namespace Bejeweled.Macth
 
             UpdateGameObjectName();
         }
+
+        public YieldInstruction Spawn(float duration)
+        {
+            transform.localScale = Vector3.one * 2F;
+            return transform.DOScale(1F, duration).WaitForCompletion();
+        }
+
+        public Tween Move(Vector2 position)
+            => transform.DOMove(position, duration: 0.25F);
+
+        public YieldInstruction DropDown(Vector2 position)
+            => transform.DOMove(position, duration: 0.1F).WaitForCompletion();
+
+        public YieldInstruction ScaleDown()
+            => transform.DOScale(0F, duration: 0.15F).WaitForCompletion();
+
+        public Tween Shake()
+            => transform.DOShakePosition(duration: 0.25F, strength: 0.5F);
 
         /// <summary>
         /// Selects this piece if possible.
