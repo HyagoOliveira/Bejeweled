@@ -254,6 +254,19 @@ namespace Bejeweled.Macth
             SelectedPiece = null;
         }
 
+        public void SwapPieces(MatchPiece piece, Vector2 direction)
+        {
+            var boardDirection = new Vector2Int(Mathf.RoundToInt(direction.x), Mathf.RoundToInt(direction.y));
+            var otherPieceBoardPosition = piece.BoardPosition + boardDirection;
+            var otherPiece = GetPieceAt(otherPieceBoardPosition);
+            var hasOtherPiece = otherPiece != null;
+            if (hasOtherPiece) StartCoroutine(SwapPieces(piece, otherPiece));
+            else
+            {
+                piece.transform.DOShakePosition(0.25F, strength: 0.5F);
+            }
+        }
+
         /// <summary>
         /// Swaps the given pieces.
         /// </summary>
@@ -261,6 +274,7 @@ namespace Bejeweled.Macth
         /// <param name="otherPiece">A piece to swap.</param>
         public IEnumerator SwapPieces(MatchPiece piece, MatchPiece otherPiece)
         {
+            DisablePieceSwap();
             var swapSequence = DOTween.Sequence().
                 Append(piece.transform.DOMove(otherPiece.transform.position, levelSettings.swapTime)).
                 Join(otherPiece.transform.DOMove(piece.transform.position, levelSettings.swapTime));
@@ -270,6 +284,7 @@ namespace Bejeweled.Macth
             var secondPosition = otherPiece.BoardPosition;
             SetPieceAt(piece.BoardPosition, otherPiece);
             SetPieceAt(secondPosition, piece);
+            EnablePieceSwap();
         }
 
         /// <summary>
@@ -351,13 +366,12 @@ namespace Bejeweled.Macth
                 return;
             }
 
-            DisableSelector();
-            DisablePieceSwap();
             StartCoroutine(CheckMatchesAndFillBoard(piece));
         }
 
         private IEnumerator CheckMatchesAndFillBoard(MatchPiece piece)
         {
+            DisableSelector();
             yield return SwapPieces(SelectedPiece, piece);
             var matchedPieces = GetMatchedPieces(out bool wasMatch);
             var revertMove = levelSettings.revertIfNoMatch && !wasMatch;
@@ -373,6 +387,7 @@ namespace Bejeweled.Macth
 
         private IEnumerator ComputerMatches(SortedSet<MatchPiece> matchedPieces)
         {
+            DisablePieceSwap();
             var totalScore = 0;
             foreach (var piece in matchedPieces)
             {
@@ -392,8 +407,10 @@ namespace Bejeweled.Macth
 
         private IEnumerator DropDownPieces()
         {
+            DisablePieceSwap();
             var size = GetSize();
             var hasDropped = false;
+
             for (int y = 1; y < size.y; y++)
             {
                 for (int x = 0; x < size.x; x++)
