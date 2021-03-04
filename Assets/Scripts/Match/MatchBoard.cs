@@ -371,7 +371,7 @@ namespace Bejeweled.Macth
             EnablePieceSwap();
         }
 
-        private IEnumerator ComputerMatches(HashSet<MatchPiece> matchedPieces)
+        private IEnumerator ComputerMatches(SortedSet<MatchPiece> matchedPieces)
         {
             var totalScore = 0;
             foreach (var piece in matchedPieces)
@@ -462,10 +462,10 @@ namespace Bejeweled.Macth
             EnablePieceSwap();
         }
 
-        private HashSet<MatchPiece> GetMatchedPieces(out bool hasMatch)
+        private SortedSet<MatchPiece> GetMatchedPieces(out bool hasMatch)
         {
             var size = GetSize();
-            var matchedPieces = new HashSet<MatchPiece>();
+            var matchedPieces = new SortedSet<MatchPiece>();
 
             for (int y = 0; y < size.y; y++)
             {
