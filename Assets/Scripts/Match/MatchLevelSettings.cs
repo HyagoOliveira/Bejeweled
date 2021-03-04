@@ -19,6 +19,8 @@ namespace Bejeweled.Macth
         public float totalScore = 50;
         [Min(0f), Tooltip("Time (in seconds) to swap between pieces.")]
         public float swapTime = 0.25f;
+        [Min(0f), Tooltip("Time (in seconds) to remove matched pieces.")]
+        public float removeMatchedPiecesTime = 0.15f;
         [Tooltip("Revert to the last move if the swap does not result in any match sequence.")]
         public bool revertIfNoMatch = true;
 

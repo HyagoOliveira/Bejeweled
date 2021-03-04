@@ -1,7 +1,7 @@
 ﻿using UnityEngine;
+using DG.Tweening;
 using System.Collections;
 using System.Collections.Generic;
-using DG.Tweening;
 
 namespace Bejeweled.Macth
 {
@@ -167,6 +167,26 @@ namespace Bejeweled.Macth
             Board[boardPosition.x, boardPosition.y].Place(boardPosition, position);
         }
 
+        public void HidePieceAt(Vector2Int boardPosition)
+        {
+            Board[boardPosition.x, boardPosition.y].gameObject.SetActive(false);
+        }
+
+        public void DestroyPieceAt(Vector2Int boardPosition)
+        {
+            var gameObject = Board[boardPosition.x, boardPosition.y].gameObject;
+            Board[boardPosition.x, boardPosition.y] = null;
+            Destroy(gameObject);
+        }
+
+        public void DestroyPieces(HashSet<MatchPiece> matchedPieces)
+        {
+            foreach (var piece in matchedPieces)
+            {
+                DestroyPieceAt(piece.BoardPosition);
+            }
+        }
+
         /// <summary>
         /// Enables the piece swap.
         /// </summary>
@@ -251,6 +271,15 @@ namespace Bejeweled.Macth
         /// <returns>True if the board has selected piece. False otherwise.</returns>
         public bool HasSelectedPiece() => SelectedPiece != null;
 
+        public bool HasPieceAt(Vector2Int position) => GetPieceAt(position) != null;
+
+        public bool CanDropDownPieceAt(MatchPiece piece)
+        {
+            var bottomBoardPosition = piece.BoardPosition - Vector2Int.down;
+            if (bottomBoardPosition.y < 0) return false;
+            return GetPieceAt(bottomBoardPosition) == null;
+        }
+
         /// <summary>
         /// Checks if the given pieces are orthogonally adjacent, 
         /// i.e. they are next to each other horizontally or vertically.
@@ -307,72 +336,74 @@ namespace Bejeweled.Macth
 
             DisableSelector();
             DisablePieceSwap();
-            StartCoroutine(CheckMatch(piece));
+            StartCoroutine(CheckMatchesAndFillBoard(piece));
         }
 
-        private IEnumerator CheckMatch(MatchPiece piece)
+        private IEnumerator CheckMatchesAndFillBoard(MatchPiece piece)
         {
             yield return SwapPieces(SelectedPiece, piece);
             var matchedPieces = GetMatchedPieces(out bool wasMatch);
             var revertMove = levelSettings.revertIfNoMatch && !wasMatch;
             if (revertMove) yield return SwapPieces(piece, SelectedPiece);
+
             UnselectPiece();
-            //yield return CheckMatchesAndFillThem();
+            yield return ComputerMatches(matchedPieces);
+            //DestroyPieces(matchedPieces);
+            yield return DropDownPieces();
             yield return new WaitForSeconds(0.1f);
             EnablePieceSwap();
         }
 
-        private IEnumerator CheckMatchesAndFillThem()
-        {
-            var matchedPieces = GetMatchedPieces(out bool hasMatch);
-
-            yield return new WaitForSeconds(0.2f);
-            ComputerScore(matchedPieces);
-
-            yield return new WaitForSeconds(0.2f);
-            FillTopPieces(matchedPieces);
-
-            yield return new WaitForSeconds(0.2f);
-            Destroy(matchedPieces);
-
-
-        }
-
-        private void ComputerScore(HashSet<MatchPiece> matchedPieces)
+        private IEnumerator ComputerMatches(HashSet<MatchPiece> matchedPieces)
         {
             var totalScore = 0;
             foreach (var piece in matchedPieces)
             {
                 totalScore += piece.GetPoints();
+                //TODO play pop sound
+                yield return piece.transform.
+                    DOScale(0F, levelSettings.removeMatchedPiecesTime).
+                    WaitForCompletion();
+                //TODO add score number animation
+                DestroyPieceAt(piece.BoardPosition);
+                //HidePieceAt(piece.BoardPosition);
             }
 
             var hasScore = totalScore > 0;
             if (hasScore) OnIncreaseScore?.Invoke(totalScore);
         }
 
-        private void FillTopPieces(HashSet<MatchPiece> matchedPieces)
+        private IEnumerator DropDownPieces()
         {
-            var rows = GetHeight();
-            foreach (var piece in matchedPieces)
+            var size = GetSize();
+            for (int x = 0; x < size.x; x++)
             {
-                var x = piece.BoardPosition.x;
-                for (int y = piece.BoardPosition.y + 1; y < rows; y++)
+                for (int y = 0; y < size.y; y++)
                 {
-                    var currentPiece = GetPieceAt(x, y);
+                    var boardPosition = new Vector2Int(x, y);
+                    var dropBoardPosition = boardPosition;
+                    var currentPiece = GetPieceAt(boardPosition);
                     if (currentPiece == null) continue;
 
-                    var bottomPosition = new Vector2Int(x, y - 1);
-                    SetPieceAt(bottomPosition, currentPiece);
-                }
-            }
-        }
+                    var canDropDown = CanDropDownPieceAt(currentPiece);
+                    if (!canDropDown) break;
 
-        private void Destroy(HashSet<MatchPiece> matchedPieces)
-        {
-            foreach (var piece in matchedPieces)
-            {
-                //TODO add animation before destroy it.
-                Destroy(piece.gameObject);
+                    for (int row = y - 1; row > -1; row--)
+                    {
+                        var bottomBoardPosition = new Vector2Int(x, row);
+                        canDropDown = !HasPieceAt(bottomBoardPosition);
+                        if (!canDropDown) break;
+
+                        dropBoardPosition = bottomBoardPosition;
+                    }
+
+                    var dropWorldPosition = currentPiece.transform.position + Vector3.down * dropBoardPosition.y;
+                    //TODO play drop sound
+                    yield return currentPiece.transform.
+                        DOMove(dropWorldPosition, levelSettings.swapTime).
+                        WaitForCompletion();
+                    SetPieceAt(dropBoardPosition, currentPiece);
+                }
             }
         }
 

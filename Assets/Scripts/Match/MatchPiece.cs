@@ -57,6 +57,10 @@ namespace Bejeweled.Macth
             set => boxCollider.size = value;
         }
 
+        public float Width => Size.x;
+
+        public float Height => Size.y;
+
         private void Reset()
         {
             boxCollider = GetComponent<BoxCollider2D>();
