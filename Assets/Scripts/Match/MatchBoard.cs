@@ -195,6 +195,9 @@ namespace Bejeweled.Macth
 
         public void DestroyPieceAt(Vector2Int boardPosition)
         {
+            var cannotDestroy = !HasPieceAt(boardPosition);
+            if (cannotDestroy) return;
+
             var gameObject = Board[boardPosition.x, boardPosition.y].gameObject;
             Board[boardPosition.x, boardPosition.y] = null;
             Destroy(gameObject);
@@ -404,8 +407,11 @@ namespace Bejeweled.Macth
                     DOScale(0F, levelSettings.removeTime).
                     WaitForCompletion();
                 //TODO add score number animation
+            }
+
+            foreach (var piece in matchedPieces)
+            {
                 DestroyPieceAt(piece.BoardPosition);
-                //HidePieceAt(piece.BoardPosition);
             }
 
             var hasScore = totalScore > 0;
@@ -416,7 +422,6 @@ namespace Bejeweled.Macth
         {
             DisablePieceSwap();
             var size = GetSize();
-            var hasDropped = false;
 
             for (int y = 1; y < size.y; y++)
             {
@@ -436,12 +441,13 @@ namespace Bejeweled.Macth
                     yield return dropDownAnimation.WaitForCompletion();
                     SetPieceAt(droppedBoardPosition, currentPiece);
                     Board[boardPosition.x, boardPosition.y] = null;
-                    hasDropped = true;
                 }
             }
 
-            var fillEmptySpaces = hasDropped && levelSettings.fillEmptySpots;
-            if (fillEmptySpaces) yield return FillEmptySpots(levelSettings.spawnTime);
+            if (levelSettings.fillEmptySpots)
+            {
+                yield return FillEmptySpots(levelSettings.spawnTime);
+            }
         }
 
         private IEnumerator FillEmptySpots(float animationTime)
@@ -497,6 +503,7 @@ namespace Bejeweled.Macth
                 {
                     var boardPosition = new Vector2Int(x, y);
                     var currentPiece = GetPieceAt(boardPosition);
+                    if (currentPiece == null) continue;
 
                     var vertMatches = FindVerticalMatches(currentPiece, out bool hasVertMatch);
                     var horzMatches = FindHorizontalMatches(currentPiece, out bool hasHorzMatch);
