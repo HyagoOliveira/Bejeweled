@@ -392,7 +392,7 @@ namespace Bejeweled.Macth
             EnablePieceSwap();
         }
 
-        private IEnumerator ComputerMatches(SortedSet<MatchPiece> matchedPieces)
+        private IEnumerator ComputerMatches(List<MatchPiece> matchedPieces)
         {
             DisablePieceSwap();
             var totalScore = 0;
@@ -486,10 +486,10 @@ namespace Bejeweled.Macth
             EnablePieceSwap();
         }
 
-        private SortedSet<MatchPiece> GetMatchedPieces(out bool hasMatch)
+        private List<MatchPiece> GetMatchedPieces(out bool hasMatch)
         {
             var size = GetSize();
-            var matchedPieces = new SortedSet<MatchPiece>();
+            var matchedPieces = new List<MatchPiece>();
 
             for (int y = 0; y < size.y; y++)
             {
@@ -498,34 +498,35 @@ namespace Bejeweled.Macth
                     var boardPosition = new Vector2Int(x, y);
                     var currentPiece = GetPieceAt(boardPosition);
 
-                    var vertMatches = FindVerticalMatches(boardPosition, currentPiece, out bool hasVertMatch);
-                    var horzMatches = FindHorizontalMatches(boardPosition, currentPiece, out bool hasHorzMatch);
+                    var vertMatches = FindVerticalMatches(currentPiece, out bool hasVertMatch);
+                    var horzMatches = FindHorizontalMatches(currentPiece, out bool hasHorzMatch);
 
                     if (hasVertMatch)
                     {
-                        matchedPieces.UnionWith(vertMatches);
+                        matchedPieces.AddRange(vertMatches);
                         matchedPieces.Add(currentPiece);
                     }
                     if (hasHorzMatch)
                     {
-                        matchedPieces.UnionWith(horzMatches);
+                        matchedPieces.AddRange(horzMatches);
                         matchedPieces.Add(currentPiece);
                     }
                 }
             }
 
+            matchedPieces.Sort();
             hasMatch = matchedPieces.Count > 0;
             return matchedPieces;
         }
 
-        private List<MatchPiece> FindVerticalMatches(Vector2Int boardPosition, MatchPiece piece, out bool wasMatch)
+        private List<MatchPiece> FindVerticalMatches(MatchPiece piece, out bool wasMatch)
         {
             var rows = GetHeight();
             var matches = new List<MatchPiece>(capacity: rows);
 
-            for (int y = boardPosition.y + 1; y < rows; y++)
+            for (int y = piece.BoardPosition.y + 1; y < rows; y++)
             {
-                var currentPiece = GetPieceAt(boardPosition.x, y);
+                var currentPiece = GetPieceAt(piece.BoardPosition.x, y);
                 var noMatch = currentPiece == null || !currentPiece.Equals(piece);
                 if (noMatch) break;
 
@@ -536,14 +537,14 @@ namespace Bejeweled.Macth
             return matches;
         }
 
-        private List<MatchPiece> FindHorizontalMatches(Vector2Int boardPosition, MatchPiece piece, out bool wasMatch)
+        private List<MatchPiece> FindHorizontalMatches(MatchPiece piece, out bool wasMatch)
         {
             var columns = GetWidth();
             var matches = new List<MatchPiece>(capacity: columns);
 
-            for (int x = boardPosition.x + 1; x < columns; x++)
+            for (int x = piece.BoardPosition.x + 1; x < columns; x++)
             {
-                var currentPiece = GetPieceAt(x, boardPosition.y);
+                var currentPiece = GetPieceAt(x, piece.BoardPosition.y);
                 var noMatch = currentPiece == null || !currentPiece.Equals(piece);
                 if (noMatch) break;
 
