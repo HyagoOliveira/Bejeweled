@@ -57,6 +57,7 @@ namespace Bejeweled.Macth
             set => boxCollider.size = value;
         }
 
+        private bool wasSwapSelection;
         private Vector3 initialSelectionPosition;
 
         public float Width => Size.x;
@@ -75,9 +76,12 @@ namespace Bejeweled.Macth
             initialSelectionPosition = Input.mousePosition;
         }
 
+        private void OnMouseDrag() => CheckSwapSelection();
+
         private void OnMouseUp()
         {
-            CheckPieceSelectionOrSwap();
+            if (!wasSwapSelection) Board.SelectPiece(this);
+            wasSwapSelection = false;
             initialSelectionPosition = default;
         }
 
@@ -168,14 +172,16 @@ namespace Bejeweled.Macth
         private void UpdateGameObjectName()
             => gameObject.name = $"{BoardPosition}\t{PrefabName}";
 
-        private void CheckPieceSelectionOrSwap()
+        private void CheckSwapSelection()
         {
-            const float swapThreshold = 0.6F;
+            if (wasSwapSelection) return;
+
+            const float swapThreshold = 0.5F;
 
             var currentMousePosition = Input.mousePosition;
             var dragDistance = Vector2.Distance(currentMousePosition, initialSelectionPosition);
             var dragWorldDistance = dragDistance / spriteRenderer.sprite.pixelsPerUnit;
-            var wasSwapSelection = Mathf.Abs(dragWorldDistance) > swapThreshold;
+            wasSwapSelection = Mathf.Abs(dragWorldDistance) > swapThreshold;
 
             if (wasSwapSelection)
             {
@@ -183,7 +189,6 @@ namespace Bejeweled.Macth
                 var direction = delta.normalized;
                 Board.SwapPieces(this, direction);
             }
-            else Board.SelectPiece(this);
         }
     }
 }
