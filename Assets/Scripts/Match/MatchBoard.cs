@@ -203,14 +203,6 @@ namespace Bejeweled.Macth
             Destroy(gameObject);
         }
 
-        public void DestroyPieces(HashSet<MatchPiece> matchedPieces)
-        {
-            foreach (var piece in matchedPieces)
-            {
-                DestroyPieceAt(piece.BoardPosition);
-            }
-        }
-
         /// <summary>
         /// Enables the piece swap.
         /// </summary>
@@ -389,7 +381,6 @@ namespace Bejeweled.Macth
 
             UnselectPiece();
             yield return ComputerMatches(matchedPieces);
-            //DestroyPieces(matchedPieces);
             yield return DropDownPieces();
             yield return new WaitForSeconds(0.1f);
             EnablePieceSwap();
