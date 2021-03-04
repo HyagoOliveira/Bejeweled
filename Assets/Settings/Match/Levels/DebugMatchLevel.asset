@@ -20,5 +20,10 @@ MonoBehaviour:
   - {fileID: 7366001248956815716, guid: c8c46dd4c2bf05e4b9acaa4d636cd38e, type: 3}
   - {fileID: 7217259547545393460, guid: 42798b2a1851561469ad23b834f5e16a, type: 3}
   totalScore: 50
+  populateSpawnTime: 0
+  spawnTime: 0.1
   swapTime: 0.25
+  removeTime: 0.15
+  dropDownTime: 0.08
   revertIfNoMatch: 0
+  fillEmptySpots: 1
