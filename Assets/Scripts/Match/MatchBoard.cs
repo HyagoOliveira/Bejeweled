@@ -155,6 +155,20 @@ namespace Bejeweled.Macth
             return validBoardPos ? Board[x, y] : null;
         }
 
+        public Vector2Int GetDroppedPosition(MatchPiece piece, out int droppedRows)
+        {
+            droppedRows = 0;
+            var droppedPosition = piece.BoardPosition;
+            while (CanDropDownPieceAt(droppedPosition))
+            {
+                droppedRows++;
+                droppedPosition += Vector2Int.down;
+                if (droppedRows > GetHeight()) break;
+            }
+
+            return droppedPosition;
+        }
+
         /// <summary>
         /// Set the given piece at the board position.
         /// </summary>
@@ -273,10 +287,13 @@ namespace Bejeweled.Macth
 
         public bool HasPieceAt(Vector2Int position) => GetPieceAt(position) != null;
 
-        public bool CanDropDownPieceAt(MatchPiece piece)
+        public bool CanDropDownPiece(MatchPiece piece)
+            => piece && CanDropDownPieceAt(piece.BoardPosition);
+
+        public bool CanDropDownPieceAt(Vector2Int position)
         {
-            var bottomBoardPosition = piece.BoardPosition - Vector2Int.down;
-            if (bottomBoardPosition.y < 0) return false;
+            if (position.y <= 0) return false;
+            var bottomBoardPosition = position + Vector2Int.down;
             return GetPieceAt(bottomBoardPosition) == null;
         }
 
@@ -376,33 +393,24 @@ namespace Bejeweled.Macth
         private IEnumerator DropDownPieces()
         {
             var size = GetSize();
-            for (int x = 0; x < size.x; x++)
+            for (int y = 1; y < size.y; y++)
             {
-                for (int y = 0; y < size.y; y++)
+                for (int x = 0; x < size.x; x++)
                 {
                     var boardPosition = new Vector2Int(x, y);
-                    var dropBoardPosition = boardPosition;
                     var currentPiece = GetPieceAt(boardPosition);
-                    if (currentPiece == null) continue;
+                    var cannotDropDown = !CanDropDownPiece(currentPiece);
+                    if (cannotDropDown) continue;
 
-                    var canDropDown = CanDropDownPieceAt(currentPiece);
-                    if (!canDropDown) break;
+                    var droppedBoardPosition = GetDroppedPosition(currentPiece, out int droppedRows);
+                    var droppedWorldPosition = currentPiece.transform.position + Vector3.down * droppedRows;
 
-                    for (int row = y - 1; row > -1; row--)
-                    {
-                        var bottomBoardPosition = new Vector2Int(x, row);
-                        canDropDown = !HasPieceAt(bottomBoardPosition);
-                        if (!canDropDown) break;
-
-                        dropBoardPosition = bottomBoardPosition;
-                    }
-
-                    var dropWorldPosition = currentPiece.transform.position + Vector3.down * dropBoardPosition.y;
                     //TODO play drop sound
-                    yield return currentPiece.transform.
-                        DOMove(dropWorldPosition, levelSettings.swapTime).
-                        WaitForCompletion();
-                    SetPieceAt(dropBoardPosition, currentPiece);
+                    var dropDownAnimation = currentPiece.transform.
+                        DOMove(droppedWorldPosition, levelSettings.dropDownTime);
+                    yield return dropDownAnimation.WaitForCompletion();
+                    SetPieceAt(droppedBoardPosition, currentPiece);
+                    Board[boardPosition.x, boardPosition.y] = null;
                 }
             }
         }
