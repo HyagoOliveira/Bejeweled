@@ -379,7 +379,7 @@ namespace Bejeweled.Macth
                 totalScore += piece.GetPoints();
                 //TODO play pop sound
                 yield return piece.transform.
-                    DOScale(0F, levelSettings.removeMatchedPiecesTime).
+                    DOScale(0F, levelSettings.removeTime).
                     WaitForCompletion();
                 //TODO add score number animation
                 DestroyPieceAt(piece.BoardPosition);

@@ -20,7 +20,7 @@ namespace Bejeweled.Macth
         [Min(0f), Tooltip("Time (in seconds) to swap between pieces.")]
         public float swapTime = 0.25f;
         [Min(0f), Tooltip("Time (in seconds) to remove matched pieces.")]
-        public float removeMatchedPiecesTime = 0.15f;
+        public float removeTime = 0.15f;
         [Min(0f), Tooltip("Time (in seconds) to drop down a piece.")]
         public float dropDownTime = 0.08f;
         [Tooltip("Revert to the last move if the swap does not result in any match sequence.")]
