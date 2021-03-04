@@ -393,6 +393,7 @@ namespace Bejeweled.Macth
         private IEnumerator DropDownPieces()
         {
             var size = GetSize();
+            var hasDropped = false;
             for (int y = 1; y < size.y; y++)
             {
                 for (int x = 0; x < size.x; x++)
@@ -411,6 +412,45 @@ namespace Bejeweled.Macth
                     yield return dropDownAnimation.WaitForCompletion();
                     SetPieceAt(droppedBoardPosition, currentPiece);
                     Board[boardPosition.x, boardPosition.y] = null;
+                    hasDropped = true;
+                }
+            }
+
+            var fillEmptySpaces = hasDropped && levelSettings.fillEmptySpots;
+            if (fillEmptySpaces) yield return FillEmptySpots();
+        }
+
+        private IEnumerator FillEmptySpots()
+        {
+            var size = GetSize();
+            var bottomLeftPosition = GetBottomLeftPosition();
+            for (int y = 0; y < size.y; y++)
+            {
+                for (int x = 0; x < size.x; x++)
+                {
+                    var boardPosition = new Vector2Int(x, y);
+                    var hasPiece = HasPieceAt(boardPosition);
+                    if (hasPiece) continue;
+
+                    var localPosition = bottomLeftPosition + boardPosition;
+                    var invalidPieceIds = new int[]
+                    {
+                        GetPieceIdAt(x - 1, y), // Gets the closest left piece id from the current position.
+                        GetPieceIdAt(x - 2, y), // Gets the further left piece id from the current position.
+                        GetPieceIdAt(x, y - 1), // Gets the closest bottom piece id from the current position.
+                        GetPieceIdAt(x, y - 2)  // Gets the further bottom piece id from the current position.
+                    };
+
+                    var currentPiece = PieceManager.InstantiateRandomPieceWithoutIds(piecesParent, invalidPieceIds);
+                    currentPiece.SetBoard(this);
+                    currentPiece.Place(boardPosition, localPosition);
+                    Board[x, y] = currentPiece;
+
+                    currentPiece.transform.localScale = Vector3.one * 2F;
+                    var spawnAnimation = currentPiece.transform.DOScale(1F, levelSettings.spawnTime);
+
+                    //TODO play spawn (pop) sound
+                    yield return spawnAnimation.WaitForCompletion();
                 }
             }
         }
