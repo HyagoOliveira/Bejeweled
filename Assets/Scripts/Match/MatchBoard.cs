@@ -243,7 +243,7 @@ namespace Bejeweled.Macth
         /// </summary>
         /// <param name="piece">The piece to check.</param>
         /// <returns>True if the given piece is selected. False otherwise.</returns>
-        public bool IsSelectedPiece(MatchPiece piece) => piece.Equals(SelectedPiece);
+        public bool IsSelectedPiece(MatchPiece piece) => piece.gameObject.Equals(SelectedPiece.gameObject);
 
         /// <summary>
         /// Checks if the board has a selected piece.
