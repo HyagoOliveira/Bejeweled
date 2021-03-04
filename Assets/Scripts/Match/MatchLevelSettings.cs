@@ -17,6 +17,8 @@ namespace Bejeweled.Macth
         [Header("Gameplay")]
         [Min(1), Tooltip("Score necessary to go to next level.")]
         public float totalScore = 50;
+        [Min(0f), Tooltip("Time (in seconds) to spawn pieces when populate the board.")]
+        public float populateSpawnTime = 0.02f;
         [Min(0f), Tooltip("Time (in seconds) to spawn pieces.")]
         public float spawnTime = 0.1f;
         [Min(0f), Tooltip("Time (in seconds) to swap between pieces.")]

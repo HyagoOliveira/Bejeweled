@@ -417,13 +417,16 @@ namespace Bejeweled.Macth
             }
 
             var fillEmptySpaces = hasDropped && levelSettings.fillEmptySpots;
-            if (fillEmptySpaces) yield return FillEmptySpots();
+            if (fillEmptySpaces) yield return FillEmptySpots(levelSettings.spawnTime);
         }
 
-        private IEnumerator FillEmptySpots()
+        private IEnumerator FillEmptySpots(float animationTime)
         {
+            DisablePieceSwap();
             var size = GetSize();
+            var showAnimation = animationTime > 0F;
             var bottomLeftPosition = GetBottomLeftPosition();
+
             for (int y = 0; y < size.y; y++)
             {
                 for (int x = 0; x < size.x; x++)
@@ -446,13 +449,17 @@ namespace Bejeweled.Macth
                     currentPiece.Place(boardPosition, localPosition);
                     Board[x, y] = currentPiece;
 
-                    currentPiece.transform.localScale = Vector3.one * 2F;
-                    var spawnAnimation = currentPiece.transform.DOScale(1F, levelSettings.spawnTime);
-
-                    //TODO play spawn (pop) sound
-                    yield return spawnAnimation.WaitForCompletion();
+                    if (showAnimation)
+                    {
+                        currentPiece.transform.localScale = Vector3.one * 2F;
+                        var spawnAnimation = currentPiece.transform.DOScale(1F, animationTime);
+                        //TODO play spawn (pop) sound
+                        yield return spawnAnimation.WaitForCompletion();
+                    }
                 }
             }
+
+            EnablePieceSwap();
         }
 
         private HashSet<MatchPiece> GetMatchedPieces(out bool hasMatch)
@@ -533,34 +540,9 @@ namespace Bejeweled.Macth
 
             DisableSelector();
             ResizeSpriteTile();
-            DisablePieceSwap();
             RemoveAllPieces();
 
-            var size = GetSize();
-            var bottomLeftPosition = GetBottomLeftPosition();
-
-            for (int y = 0; y < size.y; y++)
-            {
-                for (int x = 0; x < size.x; x++)
-                {
-                    var boardPosition = new Vector2Int(x, y);
-                    var localPosition = bottomLeftPosition + boardPosition;
-                    var invalidPieceIds = new int[]
-                    {
-                        GetPieceIdAt(x - 1, y), // Gets the closest left piece id from the current position.
-                        GetPieceIdAt(x - 2, y), // Gets the further left piece id from the current position.
-                        GetPieceIdAt(x, y - 1), // Gets the closest bottom piece id from the current position.
-                        GetPieceIdAt(x, y - 2)  // Gets the further bottom piece id from the current position.
-                    };
-
-                    Board[x, y] = PieceManager.InstantiateRandomPieceWithoutIds(piecesParent, invalidPieceIds);
-                    Board[x, y].SetBoard(this);
-                    Board[x, y].Place(boardPosition, localPosition);
-                }
-            }
-
-            //TODO wait all pieces spawn animations.
-            EnablePieceSwap();
+            StartCoroutine(FillEmptySpots(levelSettings.populateSpawnTime));
         }
 
         [ContextMenu(POPULATE_BOARD_CONTX_MENU_TITLE, isValidateFunction: true)]
