@@ -2,6 +2,7 @@
 using DG.Tweening;
 using System.Collections;
 using System.Collections.Generic;
+using System;
 
 namespace Bejeweled.Macth
 {
@@ -44,7 +45,7 @@ namespace Bejeweled.Macth
         /// <summary>
         /// Action executed every time a match is done and the score increases.
         /// </summary>
-        public System.Action<int> OnIncreaseScore { get; set; }
+        public Action<int> OnIncreaseScore { get; set; }
 
         private void Reset()
         {
@@ -66,6 +67,12 @@ namespace Bejeweled.Macth
         {
             this.levelSettings = levelSettings;
             Populate();
+        }
+
+        public void HighlightPiece(MatchPiece piece)
+        {
+            var shouldHighlight = !HasSelectedPiece();
+            if (shouldHighlight) MoveSelectorToPiece(piece);
         }
 
         /// <summary>
@@ -260,11 +267,12 @@ namespace Bejeweled.Macth
             var otherPieceBoardPosition = piece.BoardPosition + boardDirection;
             var otherPiece = GetPieceAt(otherPieceBoardPosition);
             var hasOtherPiece = otherPiece != null;
-            if (hasOtherPiece) StartCoroutine(SwapPieces(piece, otherPiece));
-            else
+            if (hasOtherPiece)
             {
-                piece.transform.DOShakePosition(0.25F, strength: 0.5F);
+                SelectedPiece = piece;
+                StartCoroutine(CheckMatchesAndFillBoard(otherPiece));
             }
+            else piece.transform.DOShakePosition(0.25F, strength: 0.5F);
         }
 
         /// <summary>
@@ -346,7 +354,6 @@ namespace Bejeweled.Macth
 
         private void SelectAsFirstPiece(MatchPiece piece)
         {
-            MoveSelectorToPiece(piece);
             SelectedPiece = piece;
             SelectedPiece.Select();
         }

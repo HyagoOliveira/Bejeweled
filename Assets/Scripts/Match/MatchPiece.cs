@@ -71,6 +71,7 @@ namespace Bejeweled.Macth
 
         private void OnMouseDown()
         {
+            Board.HighlightPiece(this);
             initialSelectionPosition = Input.mousePosition;
         }
 
