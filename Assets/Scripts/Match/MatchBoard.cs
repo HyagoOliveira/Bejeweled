@@ -375,13 +375,19 @@ namespace Bejeweled.Macth
         {
             DisableSelector();
             yield return SwapPieces(SelectedPiece, piece);
+
             var matchedPieces = GetMatchedPieces(out bool wasMatch);
             var revertMove = levelSettings.revertIfNoMatch && !wasMatch;
             if (revertMove) yield return SwapPieces(piece, SelectedPiece);
-
             UnselectPiece();
-            yield return ComputerMatches(matchedPieces);
-            yield return DropDownPieces();
+
+            while (wasMatch)
+            {
+                yield return ComputerMatches(matchedPieces);
+                yield return DropDownPieces();
+                matchedPieces = GetMatchedPieces(out wasMatch);
+            }
+
             yield return new WaitForSeconds(0.1f);
             EnablePieceSwap();
         }
@@ -394,10 +400,10 @@ namespace Bejeweled.Macth
             {
                 totalScore += piece.GetPoints();
                 //TODO play pop sound
+                //TODO add score number animation
                 yield return piece.transform.
                     DOScale(0F, levelSettings.removeTime).
                     WaitForCompletion();
-                //TODO add score number animation
             }
 
             foreach (var piece in matchedPieces)
@@ -483,7 +489,7 @@ namespace Bejeweled.Macth
             EnablePieceSwap();
         }
 
-        private List<MatchPiece> GetMatchedPieces(out bool hasMatch)
+        private List<MatchPiece> GetMatchedPieces(out bool wasMatch)
         {
             var size = GetSize();
             var matchedPieces = new List<MatchPiece>();
@@ -513,7 +519,7 @@ namespace Bejeweled.Macth
             }
 
             matchedPieces.Sort();
-            hasMatch = matchedPieces.Count > 0;
+            wasMatch = matchedPieces.Count > 0;
             return matchedPieces;
         }
 
