@@ -86,7 +86,7 @@ namespace Bejeweled.Macth
                 throw new ArgumentException("Object is not a MatchPiece");
             }
 
-            return ComparePoints(otherPiece);
+            return CompareUsingHorizontalBoardPosition(otherPiece);
         }
 
         /// <summary>
@@ -107,17 +107,20 @@ namespace Bejeweled.Macth
         public int GetPoints() => scorePoints;
 
         /// <summary>
+        /// The unique id for this piece based on the current sprite.
+        /// </summary>
+        public int GetId() => spriteRenderer.sprite.GetInstanceID();
+
+        /// <summary>
         /// Compares using the current points.
         /// </summary>
         /// <param name="otherPiece">Other piece to compare.</param>
         /// <returns></returns>
-        public int ComparePoints(MatchPiece otherPiece)
+        public int CompareUsingScorePoints(MatchPiece otherPiece)
             => scorePoints.CompareTo(otherPiece.GetPoints());
 
-        /// <summary>
-        /// The unique id for this piece based on the current sprite.
-        /// </summary>
-        public int GetId() => spriteRenderer.sprite.GetInstanceID();
+        public int CompareUsingHorizontalBoardPosition(MatchPiece otherPiece)
+            => BoardPosition.x.CompareTo(otherPiece.BoardPosition.x);
 
         /// <summary>
         /// Places this piece using the given position.
