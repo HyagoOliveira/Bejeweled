@@ -20,7 +20,19 @@ SpriteAtlas:
       readable: 0
       crunchedCompression: 0
       sRGB: 1
-    platformSettings: []
+    platformSettings:
+    - serializedVersion: 3
+      m_BuildTarget: DefaultTexturePlatform
+      m_MaxTextureSize: 512
+      m_ResizeAlgorithm: 0
+      m_TextureFormat: -1
+      m_TextureCompression: 1
+      m_CompressionQuality: 50
+      m_CrunchedCompression: 0
+      m_AllowsAlphaSplitting: 0
+      m_Overridden: 0
+      m_AndroidETC2FallbackOverride: 0
+      m_ForceMaximumCompressionQuality_BC6H_BC7: 0
     packingSettings:
       serializedVersion: 2
       padding: 4
@@ -43,6 +55,7 @@ SpriteAtlas:
   - {fileID: 21300000, guid: 8d441cccdf9de944b8dd8cc5b1aab68a, type: 3}
   - {fileID: 21300000, guid: dd226dfcd8edc1c409a051eeb64d2ec8, type: 3}
   - {fileID: 21300000, guid: 1f59aafdfcf8f3347bf0ceb7dfa6afd8, type: 3}
+  - {fileID: 21300000, guid: 0f4b1f5e0bda6ce418222e2af171cb3c, type: 3}
   - {fileID: 21300000, guid: edfdc1ce69d68b148bf07332d06ac962, type: 3}
   - {fileID: 21300000, guid: 5c10eb6ff4dc69d46bf5276317e531d4, type: 3}
   m_PackedSpriteNamesToIndex:
@@ -53,6 +66,7 @@ SpriteAtlas:
   - Gem Orange
   - Sparkle
   - Gem Yellow
+  - BoardBackground
   - Gem Red
   - Gem Violet
   m_Tag: Sprite Atlas
