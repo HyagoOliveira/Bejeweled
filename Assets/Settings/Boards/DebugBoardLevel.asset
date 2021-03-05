@@ -19,7 +19,7 @@ MonoBehaviour:
   - {fileID: 1620213370813087482, guid: 199f21a483c53be43baa649661df6fd0, type: 3}
   - {fileID: 7366001248956815716, guid: c8c46dd4c2bf05e4b9acaa4d636cd38e, type: 3}
   - {fileID: 7217259547545393460, guid: 42798b2a1851561469ad23b834f5e16a, type: 3}
-  totalScore: 50
+  totalScore: 200
   populateSpawnTime: 0
   revertIfNoMatch: 0
   fillEmptySpots: 1
