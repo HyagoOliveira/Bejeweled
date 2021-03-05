@@ -1,3 +1,15 @@
-﻿{
-	"name": "Bejeweled"
+{
+    "name": "Bejeweled",
+    "references": [
+        "GUID:f4dfeeb945ec1e4469e4acb166baa9b8"
+    ],
+    "includePlatforms": [],
+    "excludePlatforms": [],
+    "allowUnsafeCode": false,
+    "overrideReferences": false,
+    "precompiledReferences": [],
+    "autoReferenced": true,
+    "defineConstraints": [],
+    "versionDefines": [],
+    "noEngineReferences": false
 }
