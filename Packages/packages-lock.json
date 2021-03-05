@@ -1,5 +1,21 @@
 {
   "dependencies": {
+    "com.actioncode.animation-parameters": {
+      "version": "1.0.0",
+      "depth": 1,
+      "source": "registry",
+      "dependencies": {},
+      "url": "http://35.197.72.138:4873"
+    },
+    "com.actioncode.scene-management": {
+      "version": "1.0.1",
+      "depth": 0,
+      "source": "registry",
+      "dependencies": {
+        "com.actioncode.animation-parameters": "1.0.0"
+      },
+      "url": "http://35.197.72.138:4873"
+    },
     "com.demigiant.dotween": {
       "version": "1.2.42",
       "depth": 0,
