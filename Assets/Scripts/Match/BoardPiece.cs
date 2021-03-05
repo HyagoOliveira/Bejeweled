@@ -61,10 +61,6 @@ namespace Bejeweled.Macth
         private bool wasSwapSelection;
         private Vector3 initialSelectionPosition;
 
-        public float Width => Size.x;
-
-        public float Height => Size.y;
-
         private void Reset()
         {
             boxCollider = GetComponent<BoxCollider2D>();
@@ -118,13 +114,18 @@ namespace Bejeweled.Macth
         }
 
         /// <summary>
-        /// Compares using the current points.
+        /// Compares this piece using its current points.
         /// </summary>
         /// <param name="otherPiece">Other piece to compare.</param>
         /// <returns></returns>
         public int CompareUsingScorePoints(BoardPiece otherPiece)
             => scorePoints.CompareTo(otherPiece.GetPoints());
 
+        /// <summary>
+        /// Compares this piece using its current horizontal board position..
+        /// </summary>
+        /// <param name="otherPiece">Other piece to compare.</param>
+        /// <returns></returns>
         public int CompareUsingHorizontalBoardPosition(BoardPiece otherPiece)
             => BoardPosition.x.CompareTo(otherPiece.BoardPosition.x);
 
@@ -154,15 +155,31 @@ namespace Bejeweled.Macth
             UpdateGameObjectName();
         }
 
+        /// <summary>
+        /// Create a spawn animation for this piece.
+        /// </summary>
+        /// <param name="duration">The animation time.</param>
+        /// <returns></returns>
         public YieldInstruction Spawn(float duration)
         {
             transform.localScale = Vector3.one * 2F;
             return transform.DOScale(1F, duration).WaitForCompletion();
         }
 
+        /// <summary>
+        /// Create a move animation for this piece.
+        /// </summary>
+        /// <param name="position">The position to move.</param>
+        /// <returns></returns>
         public Tween Move(Vector2 position)
             => transform.DOMove(position, duration: 0.25F);
 
+
+        /// <summary>
+        /// Create a dropping down animation for this piece.
+        /// </summary>
+        /// <param name="rows">The number of rows to drop it down.</param>
+        /// <returns></returns>
         public YieldInstruction DropDown(int rows)
         {
             var position = transform.position + Vector3.down * rows;
@@ -170,9 +187,17 @@ namespace Bejeweled.Macth
             return transform.DOMove(position, duration).SetEase(Ease.InOutBounce).WaitForCompletion();
         }
 
+        /// <summary>
+        /// Create a scale down animation for this piece.
+        /// </summary>
+        /// <returns></returns>
         public YieldInstruction ScaleDown()
             => transform.DOScale(0F, duration: 0.15F).WaitForCompletion();
 
+        /// <summary>
+        /// Create a shake animation for this piece.
+        /// </summary>
+        /// <returns></returns>
         public Tween Shake()
             => transform.DOShakePosition(duration: 0.25F, strength: 0.5F);
 

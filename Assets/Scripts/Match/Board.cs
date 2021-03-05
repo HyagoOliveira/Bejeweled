@@ -78,6 +78,10 @@ namespace Bejeweled.Macth
             Populate();
         }
 
+        /// <summary>
+        /// Highlights the given piece.
+        /// </summary>
+        /// <param name="piece">A piece to highlight on the board.</param>
         public void HighlightPiece(BoardPiece piece)
         {
             Sounds.PlayPieceSelection();
@@ -130,8 +134,16 @@ namespace Bejeweled.Macth
                 (int)spriteRenderer.size.y);
         }
 
+        /// <summary>
+        /// Gets the width of the board.
+        /// </summary>
+        /// <returns>Always a integer number.</returns>
         public int GetWidth() => Pieces.GetLength(0);
 
+        /// <summary>
+        /// Gets the height of the board.
+        /// </summary>
+        /// <returns>Always a integer number.</returns>
         public int GetHeight() => Pieces.GetLength(1);
 
         /// <summary>
@@ -171,6 +183,12 @@ namespace Bejeweled.Macth
             return validBoardPos ? Pieces[x, y] : null;
         }
 
+        /// <summary>
+        /// Finds the position where the given piece should be dropped.
+        /// </summary>
+        /// <param name="piece">The piece to drop.</param>
+        /// <param name="droppedRows">The number of dropped rows.</param>
+        /// <returns>The position where the given piece should be dropped.</returns>
         public Vector2Int GetDroppedPosition(BoardPiece piece, out int droppedRows)
         {
             droppedRows = 0;
@@ -197,11 +215,10 @@ namespace Bejeweled.Macth
             Pieces[boardPosition.x, boardPosition.y].Place(boardPosition, position);
         }
 
-        public void HidePieceAt(Vector2Int boardPosition)
-        {
-            Pieces[boardPosition.x, boardPosition.y].gameObject.SetActive(false);
-        }
-
+        /// <summary>
+        /// Destroys the a piece placed at the given position. Nothing get destroyed if no piece is found.
+        /// </summary>
+        /// <param name="boardPosition">The board position to destroy the piece.</param>
         public void DestroyPieceAt(Vector2Int boardPosition)
         {
             var cannotDestroy = !HasPieceAt(boardPosition);
@@ -265,6 +282,11 @@ namespace Bejeweled.Macth
             SelectedPiece = null;
         }
 
+        /// <summary>
+        /// Swaps the given piece using the direction.
+        /// </summary>
+        /// <param name="piece">The piece to swap.</param>
+        /// <param name="direction">The normalized direction to swaps the piece.</param>
         public void SwapPieces(BoardPiece piece, Vector2 direction)
         {
             var boardDirection = new Vector2Int(Mathf.RoundToInt(direction.x), Mathf.RoundToInt(direction.y));
@@ -312,11 +334,21 @@ namespace Bejeweled.Macth
         /// <returns>True if the board has selected piece. False otherwise.</returns>
         public bool HasSelectedPiece() => SelectedPiece != null;
 
+        /// <summary>
+        /// Checks if a piece exists using the given position.
+        /// </summary>
+        /// <param name="position">A piece position to check.</param>
+        /// <returns>True if a piece exists using the given position. False otherwise.</returns>
         public bool HasPieceAt(Vector2Int position) => GetPieceAt(position) != null;
 
         public bool CanDropDownPiece(BoardPiece piece)
             => piece && CanDropDownPieceAt(piece.BoardPosition);
 
+        /// <summary>
+        /// Checks if a piece can be dropped down using the given position.
+        /// </summary>
+        /// <param name="position">A piece position to check.</param>
+        /// <returns>True if a piece can be dropped down using the given position. False otherwise.</returns>
         public bool CanDropDownPieceAt(Vector2Int position)
         {
             if (position.y <= 0) return false;

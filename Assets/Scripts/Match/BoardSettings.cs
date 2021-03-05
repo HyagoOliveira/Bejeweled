@@ -25,7 +25,7 @@ namespace Bejeweled.Macth
         public bool fillEmptySpots = true;
 
         /// <summary>
-        /// The piece prefabs available for the boardl.
+        /// The piece prefabs available for the board.
         /// </summary>
         public int PiecesCount => pieces.Length;
     }
