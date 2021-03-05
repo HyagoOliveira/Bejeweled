@@ -19,8 +19,6 @@ namespace Bejeweled.Macth
         private AudioClip spawnPiece;
         [SerializeField, Tooltip("The AudioClip played when the piece is swapped.")]
         private AudioClip swapPiece;
-        [SerializeField, Tooltip("The AudioClip played when a match is success.")]
-        private AudioClip matchSuccess;
         [SerializeField, Tooltip("The AudioClip played when a invalid move is done.")]
         private AudioClip invalidPieceMove;
 
@@ -43,11 +41,6 @@ namespace Bejeweled.Macth
         /// Plays the <see cref="swapPiece"/> audio.
         /// </summary>
         public void PlayPieceSwap() => audioSource.PlayOneShot(swapPiece);
-
-        /// <summary>
-        /// Plays the <see cref="matchSuccess"/> audio.
-        /// </summary>
-        public void PlayMatchSucess() => audioSource.PlayOneShot(matchSuccess);
 
         /// <summary>
         /// Plays the <see cref="invalidPieceMove"/> audio.
