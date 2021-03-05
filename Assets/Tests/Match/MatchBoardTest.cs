@@ -35,7 +35,7 @@ namespace Bejeweled.Tests.Macth
         [Test]
         public void WhenPopulated_BoardPieceCount_ShouldHasTheSameCountFromItsSettings()
         {
-            var actualPiecesCount = board.PieceManager.PiecesCount;
+            var actualPiecesCount = board.PieceFactory.PiecesCount;
             var expectedPiecesCount = levelSettings.PiecesCount;
 
             Assert.AreEqual(expectedPiecesCount, actualPiecesCount);

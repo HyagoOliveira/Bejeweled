@@ -4,10 +4,10 @@ using System.Collections.Generic;
 namespace Bejeweled.Macth
 {
     /// <summary>
-    /// Manager class responsible for instantiate <see cref="BoardPiece"/> components.
+    /// ManagerFactory class responsible for instantiate <see cref="BoardPiece"/> components.
     /// They can be instantiated randomly.
     /// </summary>
-    public sealed class PieceManager
+    public sealed class BoardPieceFactory
     {
         private readonly Dictionary<int, BoardPiece> prefabPieces = new Dictionary<int, BoardPiece>();
 
@@ -20,7 +20,7 @@ namespace Bejeweled.Macth
         /// Initializes the manager.
         /// </summary>
         /// <param name="prefabs">A prefab array where each GameObject contains a <see cref="BoardPiece"/> component attached on it.</param>
-        public PieceManager(GameObject[] prefabs)
+        public BoardPieceFactory(GameObject[] prefabs)
             => CreatePieceDictionary(prefabs);
 
         /// <summary>

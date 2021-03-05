@@ -31,9 +31,9 @@ namespace Bejeweled.Macth
         public BoardPiece[,] Pieces { get; private set; }
 
         /// <summary>
-        /// The manager used to populate this board.
+        /// The piece factory used to populate this board.
         /// </summary>
-        public PieceManager PieceManager { get; private set; }
+        public BoardPieceFactory PieceFactory { get; private set; }
 
         /// <summary>
         /// Is able to move pieces in this board?
@@ -519,7 +519,7 @@ namespace Bejeweled.Macth
                         GetPieceIdAt(x, y - 2)  // Gets the further bottom piece id from the current position.
                     };
 
-                    var currentPiece = PieceManager.InstantiateRandomPieceWithoutIds(piecesParent, invalidPieceIds);
+                    var currentPiece = PieceFactory.InstantiateRandomPieceWithoutIds(piecesParent, invalidPieceIds);
                     currentPiece.SetBoard(this);
                     currentPiece.Place(boardPosition, localPosition);
                     Pieces[x, y] = currentPiece;
@@ -611,7 +611,7 @@ namespace Bejeweled.Macth
         private void Populate()
         {
             Pieces = new BoardPiece[levelSettings.size.x, levelSettings.size.y];
-            PieceManager = new PieceManager(levelSettings.pieces);
+            PieceFactory = new BoardPieceFactory(levelSettings.pieces);
 
             DisableSelector();
             ResizeSpriteTile();
