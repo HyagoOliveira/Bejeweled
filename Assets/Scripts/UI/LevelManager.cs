@@ -1,4 +1,5 @@
 ﻿using UnityEngine;
+using UnityEngine.UI;
 using Bejeweled.Macth;
 
 namespace Bejeweled.UI
@@ -10,8 +11,10 @@ namespace Bejeweled.UI
     [DisallowMultipleComponent]
     public sealed class LevelManager : MonoBehaviour
     {
-        [SerializeField, Tooltip("The local SliderBar component.")]
+        [SerializeField, Tooltip("The child Score Bar component.")]
         private SliderBar scoreBar;
+        [SerializeField, Tooltip("The child Text component to show current level.")]
+        private Text currentLevel;
         [SerializeField, Tooltip("The level settings assets.")]
         private MatchLevelSettings[] levelSettings = new MatchLevelSettings[0];
 
@@ -32,7 +35,7 @@ namespace Bejeweled.UI
         private void Awake()
         {
             board = FindObjectOfType<MatchBoard>();
-            InitializeScoreBar();
+            UpdateVisualComponents();
         }
 
         private void OnEnable()
@@ -55,7 +58,7 @@ namespace Bejeweled.UI
                 currentLevelSettingsIndex = 0;
 
             if (board) board.Populate(CurrentLevelSettings);
-            InitializeScoreBar();
+            UpdateVisualComponents();
         }
 
         /// <summary>
@@ -68,12 +71,21 @@ namespace Bejeweled.UI
                 currentLevelSettingsIndex = LevelsCount - 1;
 
             if (board) board.Populate(CurrentLevelSettings);
-            InitializeScoreBar();
+            UpdateVisualComponents();
         }
 
         private void IncreaseScore(int score) => scoreBar.CurrentValue += score;
 
-        private void InitializeScoreBar()
+        private void UpdateVisualComponents()
+        {
+            UpdateScoreBar();
+            UpdateCurrentLevelText();
+        }
+
+        private void UpdateScoreBar()
             => scoreBar.Initialize(0F, CurrentLevelSettings.totalScore);
+
+        private void UpdateCurrentLevelText()
+            => currentLevel.text = CurrentLevelSettings.name;
     }
 }
