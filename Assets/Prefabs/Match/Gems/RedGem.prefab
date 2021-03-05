@@ -67,6 +67,11 @@ PrefabInstance:
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
       objectReference: {fileID: 0}
+    - target: {fileID: 4936257387935890424, guid: 8c515c060ecda1a45916ee027d825c01,
+        type: 3}
+      propertyPath: scorePoints
+      value: 6
+      objectReference: {fileID: 0}
     - target: {fileID: 5332602017926755046, guid: 8c515c060ecda1a45916ee027d825c01,
         type: 3}
       propertyPath: m_SpriteTilingProperty.pivot.x
