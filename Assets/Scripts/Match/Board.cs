@@ -442,10 +442,9 @@ namespace Bejeweled.Macth
                     if (cannotDropDown) continue;
 
                     var droppedBoardPosition = GetDroppedPosition(currentPiece, out int droppedRows);
-                    var droppedWorldPosition = currentPiece.transform.position + Vector3.down * droppedRows;
 
                     Sounds.PlayDropPieceMove();
-                    yield return currentPiece.DropDown(droppedWorldPosition);
+                    yield return currentPiece.DropDown(droppedRows);
                     SetPieceAt(droppedBoardPosition, currentPiece);
                     Pieces[boardPosition.x, boardPosition.y] = null;
                 }

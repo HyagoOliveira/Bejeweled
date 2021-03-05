@@ -163,8 +163,12 @@ namespace Bejeweled.Macth
         public Tween Move(Vector2 position)
             => transform.DOMove(position, duration: 0.25F);
 
-        public YieldInstruction DropDown(Vector2 position)
-            => transform.DOMove(position, duration: 0.2F).SetEase(Ease.InOutBounce).WaitForCompletion();
+        public YieldInstruction DropDown(int rows)
+        {
+            var position = transform.position + Vector3.down * rows;
+            var duration = rows * 0.06F;
+            return transform.DOMove(position, duration).SetEase(Ease.InOutBounce).WaitForCompletion();
+        }
 
         public YieldInstruction ScaleDown()
             => transform.DOScale(0F, duration: 0.15F).WaitForCompletion();
