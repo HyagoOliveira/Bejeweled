@@ -11,6 +11,16 @@ This is a Unity project for a game inspired by Bejeweled.
 1. Clone the repo and open it with any **Unity 2019.4 LTS** version. 
 2. Open any Scene and play it (all Scenes are playable).
 
+## Game Features
+
+1. The board can have any size or any number of different pieces;
+	- The [BoardSettings ScriptObjects](/Assets/Settings/Boards) will hold this information and populate the board at runtime.
+2. Player can swap vertically or horizontally 2 adjacent pieces;
+3. If the swap results in 3 or more pieces of the same type in adjacent rows or columns, they disappear;
+4. If the swap does not result in any sequence, the pieces return to their previous positions;
+5. When any piece disappears, the pieces above it will fall into place and new ones should appear from the top of the board, filling in the place of the previous ones;
+6. The pieces swap can be through mouse Click or Drag.
+
 ## Disclaimer
 
 Sprites and Sounds from [Unity Tiny Gems project](https://github.com/Unity-Technologies/ProjectTinySamples/tree/master/TinyGems)
