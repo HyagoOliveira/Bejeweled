@@ -408,7 +408,7 @@ namespace Bejeweled.Macth
             foreach (var piece in matchedPieces)
             {
                 totalScore += piece.GetPoints();
-                //TODO play pop sound
+                Sounds.PlayPieceSpawn();
                 //TODO add score number animation
                 yield return piece.ScaleDown();
             }
