@@ -237,6 +237,11 @@ PrefabInstance:
       propertyPath: m_AnchorMax.y
       value: 0
       objectReference: {fileID: 0}
+    - target: {fileID: 3322570917775677235, guid: f6dcd1b846a666e4cb2c8a551acee39b,
+        type: 3}
+      propertyPath: m_Name
+      value: NextLevelButton
+      objectReference: {fileID: 0}
     - target: {fileID: 3826203386558247086, guid: f6dcd1b846a666e4cb2c8a551acee39b,
         type: 3}
       propertyPath: m_AnchorMax.y
@@ -407,7 +412,8 @@ PrefabInstance:
       propertyPath: m_Name
       value: GameCanvas
       objectReference: {fileID: 0}
-    m_RemovedComponents: []
+    m_RemovedComponents:
+    - {fileID: 6972274684085936474, guid: f6dcd1b846a666e4cb2c8a551acee39b, type: 3}
   m_SourcePrefab: {fileID: 100100000, guid: f6dcd1b846a666e4cb2c8a551acee39b, type: 3}
 --- !u!1001 &1857478745
 PrefabInstance:

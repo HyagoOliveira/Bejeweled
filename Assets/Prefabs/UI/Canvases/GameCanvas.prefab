@@ -447,7 +447,7 @@ PrefabInstance:
     - target: {fileID: 3852289657335408546, guid: e79034abf9e81c246bac28d70893aa9e,
         type: 3}
       propertyPath: m_Name
-      value: NextLEvelButton
+      value: NextLevelButton
       objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: e79034abf9e81c246bac28d70893aa9e, type: 3}
@@ -757,7 +757,7 @@ PrefabInstance:
     - target: {fileID: 4490334618902238951, guid: 48737a6247094fc418912ce15f79582a,
         type: 3}
       propertyPath: m_Name
-      value: MatchCanvas
+      value: GameCanvas
       objectReference: {fileID: 0}
     - target: {fileID: 4490334618902238955, guid: 48737a6247094fc418912ce15f79582a,
         type: 3}
