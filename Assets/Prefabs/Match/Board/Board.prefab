@@ -225,7 +225,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 192e5d5917faf5447929fe23bf4bfca7, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  levelSettings: {fileID: 11400000, guid: eb455ec74a782c348bb93430f35951ad, type: 2}
+  levelSettings: {fileID: 0}
   sounds: {fileID: 178026184550545164}
   spriteRenderer: {fileID: 7679713463973986982}
   piecesParent: {fileID: 7679713462787400610}

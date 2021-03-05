@@ -38,6 +38,14 @@ namespace Bejeweled.UI
             UpdateVisualComponents();
         }
 
+        private void Start()
+        {
+            if (board && board.CanMovePieces)
+            {
+                board.Populate(CurrentLevelSettings);
+            }
+        }
+
         private void OnEnable()
         {
             if (board) board.OnIncreaseScore += IncreaseScore;

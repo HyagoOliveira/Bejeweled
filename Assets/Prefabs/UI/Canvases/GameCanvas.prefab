@@ -118,7 +118,6 @@ MonoBehaviour:
   scoreBar: {fileID: 1894744860210756198}
   currentLevel: {fileID: 7689377642706009153}
   levelSettings:
-  - {fileID: 11400000, guid: eb455ec74a782c348bb93430f35951ad, type: 2}
   - {fileID: 11400000, guid: fa650f2171676594583135f42fc56d40, type: 2}
   - {fileID: 11400000, guid: a803f3674bcacfc4186719e3f501a98f, type: 2}
   - {fileID: 11400000, guid: d2aa824edf9c4484eb2767efa1f1665c, type: 2}

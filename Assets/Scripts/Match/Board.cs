@@ -38,7 +38,7 @@ namespace Bejeweled.Macth
         /// <summary>
         /// Is able to move pieces in this board?
         /// </summary>
-        public bool CanMovePieces { get; private set; }
+        public bool CanMovePieces { get; private set; } = true;
 
         /// <summary>
         /// The current selected piece at this board.
