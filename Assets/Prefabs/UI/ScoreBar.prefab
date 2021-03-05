@@ -58,7 +58,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   m_Material: {fileID: 0}
-  m_Color: {r: 0.17254902, g: 1, b: 0.6784314, a: 1}
+  m_Color: {r: 0.76470596, g: 0.10588236, b: 0.6431373, a: 1}
   m_RaycastTarget: 0
   m_Maskable: 0
   m_OnCullStateChanged:
@@ -178,8 +178,8 @@ MonoBehaviour:
   info: {fileID: 4894638029964389627}
   gradient:
     serializedVersion: 2
-    key0: {r: 0.84705883, g: 1, b: 0.105882354, a: 1}
-    key1: {r: 0.17254902, g: 1, b: 0.6784314, a: 1}
+    key0: {r: 0.76470596, g: 0.6784314, b: 0.6431373, a: 1}
+    key1: {r: 0.76470596, g: 0.10588236, b: 0.6431373, a: 1}
     key2: {r: 0, g: 0, b: 0, a: 0}
     key3: {r: 0, g: 0, b: 0, a: 0}
     key4: {r: 0, g: 0, b: 0, a: 0}
