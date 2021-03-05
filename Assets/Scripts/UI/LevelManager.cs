@@ -74,7 +74,16 @@ namespace Bejeweled.UI
             UpdateVisualComponents();
         }
 
-        private void IncreaseScore(int score) => scoreBar.CurrentValue += score;
+        private void IncreaseScore(int score)
+        {
+            scoreBar.CurrentValue += score;
+            if (scoreBar.IsComplete()) OnScoreComplete();
+        }
+
+        private void OnScoreComplete()
+        {
+            scoreBar.UpdateInfoText("Level Completed!!");
+        }
 
         private void UpdateVisualComponents()
         {

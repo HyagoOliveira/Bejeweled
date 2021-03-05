@@ -29,7 +29,7 @@ namespace Bejeweled.UI
             set
             {
                 slider.maxValue = value;
-                UpdateInfoText();
+                UpdateScoreText();
             }
         }
 
@@ -43,7 +43,7 @@ namespace Bejeweled.UI
             {
                 slider.value = value;
                 fillImage.color = GetCurrentGradientColor();
-                UpdateInfoText();
+                UpdateScoreText();
             }
         }
 
@@ -70,11 +70,36 @@ namespace Bejeweled.UI
         }
 
         /// <summary>
+        /// Updates the <see cref="info"/> text using the given text.
+        /// </summary>
+        /// <param name="text"></param>
+        public void UpdateInfoText(string text) => info.text = text;
+
+        /// <summary>
         /// Returns the current gradient color according with <see cref="CurrentValue"/>.
         /// </summary>
         /// <returns>Always a <see cref="Color"/>.</returns>
         public Color GetCurrentGradientColor() => gradient.Evaluate(slider.normalizedValue);
 
-        private void UpdateInfoText() => info.text = $"{CurrentValue:F0} / {MaxValue:F0}";
+        /// <summary>
+        /// Checks if this bar is fully empty.
+        /// </summary>
+        /// <returns></returns>
+        public bool IsEmpty() => CurrentValue < 0F || IsCurrentValue(0F);
+
+        /// <summary>
+        /// Checks if this bar is fully completed.
+        /// </summary>
+        /// <returns></returns>
+        public bool IsComplete() => CurrentValue > MaxValue || IsCurrentValue(MaxValue);
+
+        /// <summary>
+        /// Checks if the given value is <see cref="CurrentValue"/>.
+        /// </summary>
+        /// <param name="value">A float value to check.</param>
+        /// <returns></returns>
+        public bool IsCurrentValue(float value) => Mathf.Approximately(CurrentValue, value);
+
+        private void UpdateScoreText() => UpdateInfoText($"{CurrentValue:F0} / {MaxValue:F0}");
     }
 }
