@@ -10,6 +10,7 @@ GameObject:
   m_Component:
   - component: {fileID: 2798040966642259792}
   - component: {fileID: 1736552263893040959}
+  - component: {fileID: 8291050190453114532}
   - component: {fileID: 8251582991016935337}
   - component: {fileID: 237287547866804009}
   - component: {fileID: 589691338389606786}
@@ -48,6 +49,27 @@ CanvasRenderer:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 3852289657335408546}
   m_CullTransparentMesh: 0
+--- !u!223 &8291050190453114532
+Canvas:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 3852289657335408546}
+  m_Enabled: 1
+  serializedVersion: 3
+  m_RenderMode: 2
+  m_Camera: {fileID: 0}
+  m_PlaneDistance: 100
+  m_PixelPerfect: 0
+  m_ReceivesEvents: 1
+  m_OverrideSorting: 0
+  m_OverridePixelPerfect: 0
+  m_SortingBucketNormalizedSize: 0
+  m_AdditionalShaderChannelsFlag: 0
+  m_SortingLayerID: 0
+  m_SortingOrder: 0
+  m_TargetDisplay: 0
 --- !u!114 &8251582991016935337
 MonoBehaviour:
   m_ObjectHideFlags: 0
