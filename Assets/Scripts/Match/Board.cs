@@ -390,7 +390,7 @@ namespace Bejeweled.Macth
             var revertMove = levelSettings.revertIfNoMatch && !wasMatch;
             if (revertMove)
             {
-                //TODO play revert sound
+                Sounds.PlayInvalidPieceMove();
                 yield return SwapPieces(piece, SelectedPiece);
             }
             UnselectPiece();
