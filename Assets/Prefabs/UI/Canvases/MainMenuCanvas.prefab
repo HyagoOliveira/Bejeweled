@@ -90,7 +90,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: ef6661d8572d2b24e899e5576385832e, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  gameScene: Assets/Scenes/Debug/Match3Debug.unity
+  gameScene: Assets/Scenes/Game.unity
   settings: {fileID: 11400000, guid: 118cbbc182f121142b33d98d1c5da004, type: 2}
 --- !u!95 &1184978807510496241
 Animator:
