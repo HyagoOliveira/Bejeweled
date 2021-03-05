@@ -51,6 +51,11 @@
       "scopes" : [
         "com.demigiant.dotween"
       ]
+    },
+    {
+      "name": "Action Code",
+      "url": "http://35.197.72.138:4873/",
+      "scopes": [ "com.actioncode" ]
     }
   ]
 }
