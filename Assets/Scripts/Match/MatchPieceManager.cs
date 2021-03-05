@@ -66,6 +66,8 @@ namespace Bejeweled.Macth
         /// <returns>A <see cref="MatchPiece"/> instance.</returns>
         public MatchPiece InstantiateRandomPiece(Transform parent, List<int> ids)
         {
+            if (ids.Count == 0) return null;
+
             var randomIdIndex = Random.Range(0, ids.Count);
             var id = ids[randomIdIndex];
             return InstantiatePiece(parent, id);
