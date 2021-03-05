@@ -89,6 +89,20 @@ namespace Bejeweled.Macth
         }
 
         /// <summary>
+        /// Highlights a piece that can be matched.
+        /// </summary>
+        public void HighlightHint()
+        {
+            var preMatchPiece = GetPreMatchPiece();
+            if (preMatchPiece)
+            {
+                MoveSelectorToPiece(preMatchPiece);
+                Invoke("DisableSelector", time: 1F);
+            }
+        }
+
+
+        /// <summary>
         /// Removes all <see cref="BoardPiece"/> GameObjects from this board.
         /// </summary>
         public void RemoveAllPieces()
@@ -188,6 +202,69 @@ namespace Bejeweled.Macth
             var validVertPos = y >= 0 && y < levelSettings.size.y;
             var validBoardPos = validHorzPos && validVertPos;
             return validBoardPos ? Pieces[x, y] : null;
+        }
+
+        /// <summary>
+        /// Finds a piece that can be matched.
+        /// </summary>
+        /// <returns>A piece that can be matched or null.</returns>
+        public BoardPiece GetPreMatchPiece()
+        {
+            var size = GetSizeAsInt() - Vector2Int.one;
+
+            for (int y = 1; y < size.y; y++)
+            {
+                for (int x = 0; x < size.x; x++)
+                {
+                    var pos = new Vector2Int(x, y);
+                    var piece = GetPieceAt(pos);
+                    if (piece == null) continue;
+
+                    var rightPieces = GetPieces(pos, Vector2Int.right, 2);
+                    var bottomPieces = GetPieces(pos, Vector2Int.down, 2);
+                    var isRightDoubleMatch = rightPieces[0] && rightPieces[1] && rightPieces[0].Equals(rightPieces[1]);
+                    var isBottomDoubleMatch = bottomPieces[0] && bottomPieces[1] && bottomPieces[0].Equals(bottomPieces[1]);
+                    var canHorizontalMatch = isRightDoubleMatch &&
+                        (
+                            IsSamePiece(rightPieces[0], pos + Vector2Int.up) ||
+                            IsSamePiece(rightPieces[0], pos + Vector2Int.left) ||
+                            IsSamePiece(rightPieces[0], pos + Vector2Int.down)
+                        );
+                    var canVerticalMatch = isBottomDoubleMatch &&
+                        (
+                            IsSamePiece(bottomPieces[0], pos + Vector2Int.left) ||
+                            IsSamePiece(bottomPieces[0], pos + Vector2Int.up) ||
+                            IsSamePiece(bottomPieces[0], pos + Vector2Int.right)
+                        );
+                    var canMatch = canHorizontalMatch || canVerticalMatch;
+                    if (canMatch) return piece;
+
+                    var canBottomMatch =
+                        IsSamePiece(piece, piece.BoardPosition + new Vector2Int(1, -1)) &&
+                        IsSamePiece(piece, piece.BoardPosition + new Vector2Int(-1, -1));
+                    if (canBottomMatch) return piece;
+                }
+            }
+
+            return null;
+        }
+
+
+        /// <summary>
+        /// Get a list of pieces from the given position and direction.
+        /// </summary>
+        /// <param name="position">The position to fetch the list. This position is not included in the list.</param>
+        /// <param name="direction">The direction to fetch the list.</param>
+        /// <param name="count">The number of pieces to fetch.</param>
+        /// <returns></returns>
+        public BoardPiece[] GetPieces(Vector2Int position, Vector2Int direction, int count)
+        {
+            var pieces = new BoardPiece[count];
+            for (int i = 0; i < pieces.Length; i++)
+            {
+                pieces[i] = GetPieceAt(position + direction * (i + 1));
+            }
+            return pieces;
         }
 
         /// <summary>
@@ -334,6 +411,18 @@ namespace Bejeweled.Macth
         /// <param name="piece">The piece to check.</param>
         /// <returns>True if the given piece is selected. False otherwise.</returns>
         public bool IsSelectedPiece(BoardPiece piece) => piece.gameObject.Equals(SelectedPiece.gameObject);
+
+        /// <summary>
+        /// Checks if the given piece is the same from other at the given position.
+        /// </summary>
+        /// <param name="piece">A piece to be check.</param>
+        /// <param name="position"></param>
+        /// <returns></returns>
+        public bool IsSamePiece(BoardPiece piece, Vector2Int position)
+        {
+            var otherPiece = GetPieceAt(position);
+            return otherPiece ? otherPiece.Equals(piece) : false;
+        }
 
         /// <summary>
         /// Checks if the board has a selected piece.

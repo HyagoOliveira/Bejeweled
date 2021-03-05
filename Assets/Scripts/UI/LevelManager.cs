@@ -78,6 +78,14 @@ namespace Bejeweled.UI
             UpdateVisualComponents();
         }
 
+        /// <summary>
+        /// Shows a hint at the board.
+        /// </summary>
+        public void ShowHint()
+        {
+            if (board) board.HighlightHint();
+        }
+
         private void IncreaseScore(int score)
         {
             scoreBar.CurrentValue += score;
