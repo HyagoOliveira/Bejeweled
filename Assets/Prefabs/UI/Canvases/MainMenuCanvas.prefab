@@ -12,7 +12,6 @@ GameObject:
   - component: {fileID: 600922166594034229}
   - component: {fileID: 2967035229250190949}
   - component: {fileID: 7675955248337437910}
-  - component: {fileID: 3637627581294965535}
   - component: {fileID: 1184978807510496241}
   m_Layer: 5
   m_Name: MenuPanel
@@ -93,27 +92,6 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   gameScene: Assets/Scenes/Debug/Match3Debug.unity
   settings: {fileID: 11400000, guid: 118cbbc182f121142b33d98d1c5da004, type: 2}
---- !u!320 &3637627581294965535
-PlayableDirector:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 642656736300915168}
-  m_Enabled: 1
-  serializedVersion: 3
-  m_PlayableAsset: {fileID: 11400000, guid: 1118170074e6b85419ab876735c1b19d, type: 2}
-  m_InitialState: 1
-  m_WrapMode: 0
-  m_DirectorUpdateMode: 1
-  m_InitialTime: 0
-  m_SceneBindings:
-  - key: {fileID: -5871660975060701044, guid: 1118170074e6b85419ab876735c1b19d, type: 2}
-    value: {fileID: 1184978807510496241}
-  - key: {fileID: 6623696503840214494, guid: 1118170074e6b85419ab876735c1b19d, type: 2}
-    value: {fileID: 1184978807510496241}
-  m_ExposedReferences:
-    m_References: []
 --- !u!95 &1184978807510496241
 Animator:
   serializedVersion: 3
@@ -443,7 +421,7 @@ PrefabInstance:
     - target: {fileID: 6067909479795526846, guid: ba712505ae7393545a4fe3b14ad3fca3,
         type: 3}
       propertyPath: m_LocalPosition.x
-      value: 208
+      value: 223
       objectReference: {fileID: 0}
     - target: {fileID: 6067909479795526846, guid: ba712505ae7393545a4fe3b14ad3fca3,
         type: 3}
