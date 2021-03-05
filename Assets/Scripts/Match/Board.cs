@@ -112,16 +112,23 @@ namespace Bejeweled.Macth
         /// <summary>
         /// Returns the board bottom left position.
         /// </summary>
-        /// <returns>Always a <see cref="Vector2Int"/> position.</returns>
-        public Vector2Int GetBottomLeftPosition()
-            => GetCenterPosition() - GetSize() / 2;
+        /// <returns>Always a <see cref="Vector2"/> position.</returns>
+        public Vector2 GetBottomLeftPosition()
+            => GetCenterPosition() - GetSize() * 0.5F;
+
+        /// <summary>
+        /// Returns the board size as integers.
+        /// </summary>
+        /// <returns>Always a <see cref="Vector2Int"/> instance.</returns>
+        public Vector2Int GetSizeAsInt()
+            => new Vector2Int(GetWidth(), GetHeight());
 
         /// <summary>
         /// Returns the board size.
         /// </summary>
-        /// <returns>Always a <see cref="Vector2Int"/> instance.</returns>
-        public Vector2Int GetSize()
-            => new Vector2Int(GetWidth(), GetHeight());
+        /// <returns>Always a <see cref="Vector2"/> instance.</returns>
+        public Vector2 GetSize()
+            => new Vector2(GetWidth(), GetHeight());
 
         /// <summary>
         /// Returns the board sprite tiled size.
@@ -385,7 +392,7 @@ namespace Bejeweled.Macth
         private void ResizeSpriteTile()
         {
             spriteRenderer.drawMode = SpriteDrawMode.Tiled;
-            spriteRenderer.size = GetSize();
+            spriteRenderer.size = GetSizeAsInt();
         }
 
         private void SelectAsFirstPiece(BoardPiece piece)
@@ -462,7 +469,7 @@ namespace Bejeweled.Macth
         private IEnumerator DropDownPieces()
         {
             DisablePieceSwap();
-            var size = GetSize();
+            var size = GetSizeAsInt();
 
             for (int y = 1; y < size.y; y++)
             {
@@ -491,7 +498,7 @@ namespace Bejeweled.Macth
         private IEnumerator FillEmptySpots(float spawnTime = 0.1F)
         {
             DisablePieceSwap();
-            var size = GetSize();
+            var size = GetSizeAsInt();
             var showAnimation = spawnTime > 0F;
             var bottomLeftPosition = GetBottomLeftPosition();
 
@@ -530,7 +537,7 @@ namespace Bejeweled.Macth
 
         private List<BoardPiece> GetMatchedPieces(out bool wasMatch)
         {
-            var size = GetSize();
+            var size = GetSizeAsInt();
             var matchedPieces = new List<BoardPiece>();
 
             for (int y = 0; y < size.y; y++)

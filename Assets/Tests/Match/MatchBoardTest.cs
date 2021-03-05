@@ -26,7 +26,7 @@ namespace Bejeweled.Tests.Macth
         [Test]
         public void WhenResized_BoardSize_ShouldBeTheSameFromItsSettings()
         {
-            var actualSize = board.GetSize();
+            var actualSize = board.GetSizeAsInt();
             var expectedSize = levelSettings.size;
 
             Assert.AreEqual(expectedSize, actualSize);
@@ -44,7 +44,7 @@ namespace Bejeweled.Tests.Macth
         [Test]
         public void WhenPopulated_AllBoardPieces_ShouldNotBeOnInitialMatch()
         {
-            var size = board.GetSize();
+            var size = board.GetSizeAsInt();
 
             for (int y = 0; y < size.y; y++)
             {
@@ -70,7 +70,7 @@ namespace Bejeweled.Tests.Macth
         [Test]
         public void WhenPopulated_IsAdjacentPositionFunction_ShouldAlwaysBeCorrect()
         {
-            var halfSize = board.GetSize() / 2;
+            var halfSize = board.GetSizeAsInt() / 2;
             var centerPosition = halfSize;
 
             var closestRightPosition = centerPosition + Vector2Int.right;
@@ -119,7 +119,7 @@ namespace Bejeweled.Tests.Macth
 
         private void InstanciateBoardPrefab()
         {
-            const string prefabName = "MatchBoard";
+            const string prefabName = "Board";
             var boardPrefab = TestUtility.FindPrefab(prefabName);
             board = Object.Instantiate(boardPrefab).GetComponent<Board>();
         }
