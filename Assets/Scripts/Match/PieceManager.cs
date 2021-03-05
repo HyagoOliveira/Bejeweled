@@ -66,7 +66,7 @@ namespace Bejeweled.Macth
         /// <returns>A <see cref="BoardPiece"/> instance.</returns>
         public BoardPiece InstantiateRandomPiece(Transform parent, List<int> ids)
         {
-            if (ids.Count == 0) return null;
+            if (ids.Count == 0) return InstantiateRandomPiece(parent);
 
             var randomIdIndex = Random.Range(0, ids.Count);
             var id = ids[randomIdIndex];
