@@ -444,7 +444,7 @@ namespace Bejeweled.Macth
                     var droppedBoardPosition = GetDroppedPosition(currentPiece, out int droppedRows);
                     var droppedWorldPosition = currentPiece.transform.position + Vector3.down * droppedRows;
 
-                    //TODO play drop sound
+                    Sounds.PlayDropPieceMove();
                     yield return currentPiece.DropDown(droppedWorldPosition);
                     SetPieceAt(droppedBoardPosition, currentPiece);
                     Pieces[boardPosition.x, boardPosition.y] = null;
