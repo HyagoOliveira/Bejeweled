@@ -1,6 +1,6 @@
 # Bejeweled
 
-This is a Unity project for a game inspirated by Bejeweled.
+This is a Unity project for a game inspired by Bejeweled.
 
 * Unity version: **2019.4**
 * Current version: **0.1.0**
@@ -8,7 +8,7 @@ This is a Unity project for a game inspirated by Bejeweled.
 
 ## How to Use
 
-1. Clone the repo and open it with any Unity 2019.4 LTS version. 
+1. Clone the repo and open it with any **Unity 2019.4 LTS** version. 
 2. Open any Scene and play it (all Scenes are playable).
 
 ## Disclaimer
