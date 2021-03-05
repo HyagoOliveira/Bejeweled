@@ -11,10 +11,10 @@ namespace Bejeweled.Macth
     /// </summary>
     [DisallowMultipleComponent]
     [RequireComponent(typeof(SpriteRenderer))]
-    public sealed class MatchBoard : MonoBehaviour
+    public sealed class Board : MonoBehaviour
     {
         [SerializeField, Tooltip("The level settings asset.")]
-        private MatchLevelSettings levelSettings;
+        private BoardSettings levelSettings;
         [SerializeField, Tooltip("The local SpriteRenderer component.")]
         private SpriteRenderer spriteRenderer;
         [SerializeField, Tooltip("The child Transform to hold all the board pieces.")]
@@ -25,12 +25,12 @@ namespace Bejeweled.Macth
         /// <summary>
         /// The board grid array.
         /// </summary>
-        public MatchPiece[,] Board { get; private set; }
+        public BoardPiece[,] Pieces { get; private set; }
 
         /// <summary>
         /// The manager used to populate this board.
         /// </summary>
-        public MatchPieceManager PieceManager { get; private set; }
+        public PieceManager PieceManager { get; private set; }
 
         /// <summary>
         /// Is able to swap pieces in this board?
@@ -40,7 +40,7 @@ namespace Bejeweled.Macth
         /// <summary>
         /// The current selected piece at this board.
         /// </summary>
-        public MatchPiece SelectedPiece { get; private set; }
+        public BoardPiece SelectedPiece { get; private set; }
 
         /// <summary>
         /// Action executed every time a match is done and the score increases.
@@ -63,24 +63,24 @@ namespace Bejeweled.Macth
         /// Populates the board using the given level settings asset.
         /// </summary>
         /// <param name="levelSettings">Level Settings used to populate the board.</param>
-        public void Populate(MatchLevelSettings levelSettings)
+        public void Populate(BoardSettings levelSettings)
         {
             this.levelSettings = levelSettings;
             Populate();
         }
 
-        public void HighlightPiece(MatchPiece piece)
+        public void HighlightPiece(BoardPiece piece)
         {
             var shouldHighlight = !HasSelectedPiece();
             if (shouldHighlight) MoveSelectorToPiece(piece);
         }
 
         /// <summary>
-        /// Removes all <see cref="MatchPiece"/> GameObjects from this board.
+        /// Removes all <see cref="BoardPiece"/> GameObjects from this board.
         /// </summary>
         public void RemoveAllPieces()
         {
-            var piecesComponents = piecesParent.GetComponentsInChildren<MatchPiece>(includeInactive: true);
+            var piecesComponents = piecesParent.GetComponentsInChildren<BoardPiece>(includeInactive: true);
             foreach (var piece in piecesComponents)
             {
                 Destroy(piece.gameObject);
@@ -121,9 +121,9 @@ namespace Bejeweled.Macth
                 (int)spriteRenderer.size.y);
         }
 
-        public int GetWidth() => Board.GetLength(0);
+        public int GetWidth() => Pieces.GetLength(0);
 
-        public int GetHeight() => Board.GetLength(1);
+        public int GetHeight() => Pieces.GetLength(1);
 
         /// <summary>
         /// Returns the piece id at the given position.
@@ -142,7 +142,7 @@ namespace Bejeweled.Macth
         /// </summary>
         /// <param name="boardPosition">The board position.</param>
         /// <returns>A piece instance or null if the given board position is outside the board.</returns>
-        public MatchPiece GetPieceAt(Vector2Int boardPosition)
+        public BoardPiece GetPieceAt(Vector2Int boardPosition)
         {
             if (boardPosition == null) return null;
             return GetPieceAt(boardPosition.x, boardPosition.y);
@@ -154,15 +154,15 @@ namespace Bejeweled.Macth
         /// <param name="x">The horizontal board position.</param>
         /// <param name="y">The vertical board position.</param>
         /// <returns>A piece instance or null if the given position is outside the board.</returns>
-        public MatchPiece GetPieceAt(int x, int y)
+        public BoardPiece GetPieceAt(int x, int y)
         {
-            var validHorzPos = x >= 0 && x < levelSettings.boardSize.x;
-            var validVertPos = y >= 0 && y < levelSettings.boardSize.y;
+            var validHorzPos = x >= 0 && x < levelSettings.size.x;
+            var validVertPos = y >= 0 && y < levelSettings.size.y;
             var validBoardPos = validHorzPos && validVertPos;
-            return validBoardPos ? Board[x, y] : null;
+            return validBoardPos ? Pieces[x, y] : null;
         }
 
-        public Vector2Int GetDroppedPosition(MatchPiece piece, out int droppedRows)
+        public Vector2Int GetDroppedPosition(BoardPiece piece, out int droppedRows)
         {
             droppedRows = 0;
             var droppedPosition = piece.BoardPosition;
@@ -181,16 +181,16 @@ namespace Bejeweled.Macth
         /// </summary>
         /// <param name="boardPosition">The board position.</param>
         /// <param name="piece">The piece to set.</param>
-        public void SetPieceAt(Vector2Int boardPosition, MatchPiece piece)
+        public void SetPieceAt(Vector2Int boardPosition, BoardPiece piece)
         {
             var position = GetBottomLeftPosition() + boardPosition;
-            Board[boardPosition.x, boardPosition.y] = piece;
-            Board[boardPosition.x, boardPosition.y].Place(boardPosition, position);
+            Pieces[boardPosition.x, boardPosition.y] = piece;
+            Pieces[boardPosition.x, boardPosition.y].Place(boardPosition, position);
         }
 
         public void HidePieceAt(Vector2Int boardPosition)
         {
-            Board[boardPosition.x, boardPosition.y].gameObject.SetActive(false);
+            Pieces[boardPosition.x, boardPosition.y].gameObject.SetActive(false);
         }
 
         public void DestroyPieceAt(Vector2Int boardPosition)
@@ -198,8 +198,8 @@ namespace Bejeweled.Macth
             var cannotDestroy = !HasPieceAt(boardPosition);
             if (cannotDestroy) return;
 
-            var gameObject = Board[boardPosition.x, boardPosition.y].gameObject;
-            Board[boardPosition.x, boardPosition.y] = null;
+            var gameObject = Pieces[boardPosition.x, boardPosition.y].gameObject;
+            Pieces[boardPosition.x, boardPosition.y] = null;
             Destroy(gameObject);
         }
 
@@ -227,7 +227,7 @@ namespace Bejeweled.Macth
         /// Moves the board selector to the given piece board position.
         /// </summary>
         /// <param name="piece">The piece to move the selector.</param>
-        public void MoveSelectorToPiece(MatchPiece piece)
+        public void MoveSelectorToPiece(BoardPiece piece)
         {
             EnableSelector();
             selector.position = piece.transform.position;
@@ -237,7 +237,7 @@ namespace Bejeweled.Macth
         /// Selects the given piece and execute all match logic.
         /// </summary>
         /// <param name="piece">A piece to select.</param>
-        public void SelectPiece(MatchPiece piece)
+        public void SelectPiece(BoardPiece piece)
         {
             if (CanSwapPieces)
             {
@@ -256,7 +256,7 @@ namespace Bejeweled.Macth
             SelectedPiece = null;
         }
 
-        public void SwapPieces(MatchPiece piece, Vector2 direction)
+        public void SwapPieces(BoardPiece piece, Vector2 direction)
         {
             var boardDirection = new Vector2Int(Mathf.RoundToInt(direction.x), Mathf.RoundToInt(direction.y));
             var otherPieceBoardPosition = piece.BoardPosition + boardDirection;
@@ -275,7 +275,7 @@ namespace Bejeweled.Macth
         /// </summary>
         /// <param name="piece">A piece to swap.</param>
         /// <param name="otherPiece">A piece to swap.</param>
-        public IEnumerator SwapPieces(MatchPiece piece, MatchPiece otherPiece)
+        public IEnumerator SwapPieces(BoardPiece piece, BoardPiece otherPiece)
         {
             DisablePieceSwap();
             var swapSequence = DOTween.Sequence().
@@ -295,7 +295,7 @@ namespace Bejeweled.Macth
         /// </summary>
         /// <param name="piece">The piece to check.</param>
         /// <returns>True if the given piece is selected. False otherwise.</returns>
-        public bool IsSelectedPiece(MatchPiece piece) => piece.gameObject.Equals(SelectedPiece.gameObject);
+        public bool IsSelectedPiece(BoardPiece piece) => piece.gameObject.Equals(SelectedPiece.gameObject);
 
         /// <summary>
         /// Checks if the board has a selected piece.
@@ -305,7 +305,7 @@ namespace Bejeweled.Macth
 
         public bool HasPieceAt(Vector2Int position) => GetPieceAt(position) != null;
 
-        public bool CanDropDownPiece(MatchPiece piece)
+        public bool CanDropDownPiece(BoardPiece piece)
             => piece && CanDropDownPieceAt(piece.BoardPosition);
 
         public bool CanDropDownPieceAt(Vector2Int position)
@@ -322,7 +322,7 @@ namespace Bejeweled.Macth
         /// <param name="piece">The first piece to check.</param>
         /// <param name="otherPiece">The second piece to check.</param>
         /// <returns>True if the given positions are adjacents to each other. False otherwise.</returns>
-        public bool IsAdjacentPieces(MatchPiece piece, MatchPiece otherPiece)
+        public bool IsAdjacentPieces(BoardPiece piece, BoardPiece otherPiece)
             => IsAdjacentPosition(piece.BoardPosition, otherPiece.BoardPosition);
 
         /// <summary>
@@ -347,13 +347,13 @@ namespace Bejeweled.Macth
             spriteRenderer.size = GetSize();
         }
 
-        private void SelectAsFirstPiece(MatchPiece piece)
+        private void SelectAsFirstPiece(BoardPiece piece)
         {
             SelectedPiece = piece;
             SelectedPiece.Select();
         }
 
-        private void SelectAsSecondPiece(MatchPiece piece)
+        private void SelectAsSecondPiece(BoardPiece piece)
         {
             if (IsSelectedPiece(piece))
             {
@@ -371,7 +371,7 @@ namespace Bejeweled.Macth
             StartCoroutine(CheckMatchesAndFillBoard(piece));
         }
 
-        private IEnumerator CheckMatchesAndFillBoard(MatchPiece piece)
+        private IEnumerator CheckMatchesAndFillBoard(BoardPiece piece)
         {
             DisableSelector();
             yield return SwapPieces(SelectedPiece, piece);
@@ -392,7 +392,7 @@ namespace Bejeweled.Macth
             EnablePieceSwap();
         }
 
-        private IEnumerator ComputerMatches(List<MatchPiece> matchedPieces)
+        private IEnumerator ComputerMatches(List<BoardPiece> matchedPieces)
         {
             DisablePieceSwap();
             var totalScore = 0;
@@ -433,7 +433,7 @@ namespace Bejeweled.Macth
                     //TODO play drop sound
                     yield return currentPiece.DropDown(droppedWorldPosition);
                     SetPieceAt(droppedBoardPosition, currentPiece);
-                    Board[boardPosition.x, boardPosition.y] = null;
+                    Pieces[boardPosition.x, boardPosition.y] = null;
                 }
             }
 
@@ -470,7 +470,7 @@ namespace Bejeweled.Macth
                     var currentPiece = PieceManager.InstantiateRandomPieceWithoutIds(piecesParent, invalidPieceIds);
                     currentPiece.SetBoard(this);
                     currentPiece.Place(boardPosition, localPosition);
-                    Board[x, y] = currentPiece;
+                    Pieces[x, y] = currentPiece;
 
                     if (showAnimation)
                     {
@@ -483,10 +483,10 @@ namespace Bejeweled.Macth
             EnablePieceSwap();
         }
 
-        private List<MatchPiece> GetMatchedPieces(out bool wasMatch)
+        private List<BoardPiece> GetMatchedPieces(out bool wasMatch)
         {
             var size = GetSize();
-            var matchedPieces = new List<MatchPiece>();
+            var matchedPieces = new List<BoardPiece>();
 
             for (int y = 0; y < size.y; y++)
             {
@@ -517,10 +517,10 @@ namespace Bejeweled.Macth
             return matchedPieces;
         }
 
-        private List<MatchPiece> FindVerticalMatches(MatchPiece piece, out bool wasMatch)
+        private List<BoardPiece> FindVerticalMatches(BoardPiece piece, out bool wasMatch)
         {
             var rows = GetHeight();
-            var matches = new List<MatchPiece>(capacity: rows);
+            var matches = new List<BoardPiece>(capacity: rows);
 
             for (int y = piece.BoardPosition.y + 1; y < rows; y++)
             {
@@ -535,10 +535,10 @@ namespace Bejeweled.Macth
             return matches;
         }
 
-        private List<MatchPiece> FindHorizontalMatches(MatchPiece piece, out bool wasMatch)
+        private List<BoardPiece> FindHorizontalMatches(BoardPiece piece, out bool wasMatch)
         {
             var columns = GetWidth();
-            var matches = new List<MatchPiece>(capacity: columns);
+            var matches = new List<BoardPiece>(capacity: columns);
 
             for (int x = piece.BoardPosition.x + 1; x < columns; x++)
             {
@@ -558,8 +558,8 @@ namespace Bejeweled.Macth
         [ContextMenu(POPULATE_BOARD_CONTX_MENU_TITLE)]
         private void Populate()
         {
-            Board = new MatchPiece[levelSettings.boardSize.x, levelSettings.boardSize.y];
-            PieceManager = new MatchPieceManager(levelSettings.pieces);
+            Pieces = new BoardPiece[levelSettings.size.x, levelSettings.size.y];
+            PieceManager = new PieceManager(levelSettings.pieces);
 
             DisableSelector();
             ResizeSpriteTile();

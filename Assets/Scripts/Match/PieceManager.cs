@@ -4,12 +4,12 @@ using System.Collections.Generic;
 namespace Bejeweled.Macth
 {
     /// <summary>
-    /// Manager class responsible for instantiate <see cref="MatchPiece"/> components.
+    /// Manager class responsible for instantiate <see cref="BoardPiece"/> components.
     /// They can be instantiated randomly.
     /// </summary>
-    public sealed class MatchPieceManager
+    public sealed class PieceManager
     {
-        private readonly Dictionary<int, MatchPiece> prefabPieces = new Dictionary<int, MatchPiece>();
+        private readonly Dictionary<int, BoardPiece> prefabPieces = new Dictionary<int, BoardPiece>();
 
         /// <summary>
         /// The total pieces count.
@@ -19,8 +19,8 @@ namespace Bejeweled.Macth
         /// <summary>
         /// Initializes the manager.
         /// </summary>
-        /// <param name="prefabs">A prefab array where each GameObject contains a <see cref="MatchPiece"/> component attached on it.</param>
-        public MatchPieceManager(GameObject[] prefabs)
+        /// <param name="prefabs">A prefab array where each GameObject contains a <see cref="BoardPiece"/> component attached on it.</param>
+        public PieceManager(GameObject[] prefabs)
             => CreatePieceDictionary(prefabs);
 
         /// <summary>
@@ -34,8 +34,8 @@ namespace Bejeweled.Macth
         /// Instantiates a random match piece.
         /// </summary>
         /// <param name="parent">The parent transform for this piece.</param>
-        /// <returns>A <see cref="MatchPiece"/> instance.</returns>
-        public MatchPiece InstantiateRandomPiece(Transform parent)
+        /// <returns>A <see cref="BoardPiece"/> instance.</returns>
+        public BoardPiece InstantiateRandomPiece(Transform parent)
         {
             var ids = new List<int>(prefabPieces.Keys);
             return InstantiateRandomPiece(parent, ids);
@@ -46,8 +46,8 @@ namespace Bejeweled.Macth
         /// </summary>
         /// <param name="parent">The parent transform for this piece.</param>
         /// <param name="invalidIds">A list of invalid ids to NOT use when choose a random piece.</param>
-        /// <returns>A <see cref="MatchPiece"/> instance.</returns>
-        public MatchPiece InstantiateRandomPieceWithoutIds(Transform parent, int[] invalidIds)
+        /// <returns>A <see cref="BoardPiece"/> instance.</returns>
+        public BoardPiece InstantiateRandomPieceWithoutIds(Transform parent, int[] invalidIds)
         {
             var ids = new List<int>(prefabPieces.Keys);
             foreach (var invalidId in invalidIds)
@@ -63,8 +63,8 @@ namespace Bejeweled.Macth
         /// </summary>
         /// <param name="parent">The parent transform for this piece.</param>
         /// <param name="ids">A list of valid ids to use when choose a random piece.</param>
-        /// <returns>A <see cref="MatchPiece"/> instance.</returns>
-        public MatchPiece InstantiateRandomPiece(Transform parent, List<int> ids)
+        /// <returns>A <see cref="BoardPiece"/> instance.</returns>
+        public BoardPiece InstantiateRandomPiece(Transform parent, List<int> ids)
         {
             if (ids.Count == 0) return null;
 
@@ -78,15 +78,15 @@ namespace Bejeweled.Macth
         /// </summary>
         /// <param name="parent">The parent transform for this piece.</param>
         /// <param name="id">The piece id.</param>
-        /// <returns>A <see cref="MatchPiece"/> instance.</returns>
-        public MatchPiece InstantiatePiece(Transform parent, int id)
+        /// <returns>A <see cref="BoardPiece"/> instance.</returns>
+        public BoardPiece InstantiatePiece(Transform parent, int id)
         {
             var invalidPieceID = !ContainsPiece(id);
             if (invalidPieceID) return null;
 
             var prefab = prefabPieces[id];
             var instance = Object.Instantiate(prefab, parent: parent);
-            var piece = instance.GetComponent<MatchPiece>();
+            var piece = instance.GetComponent<BoardPiece>();
             if (piece) piece.PrefabName = prefab.name;
             return piece;
         }
@@ -96,7 +96,7 @@ namespace Bejeweled.Macth
             prefabPieces.Clear();
             foreach (var prefab in prefabs)
             {
-                var piece = prefab.GetComponent<MatchPiece>();
+                var piece = prefab.GetComponent<BoardPiece>();
                 if (piece) prefabPieces.Add(piece.GetId(), piece);
             }
         }

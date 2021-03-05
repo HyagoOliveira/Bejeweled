@@ -16,12 +16,12 @@ namespace Bejeweled.UI
         [SerializeField, Tooltip("The child Text component to show current level.")]
         private Text currentLevel;
         [SerializeField, Tooltip("The level settings assets.")]
-        private MatchLevelSettings[] levelSettings = new MatchLevelSettings[0];
+        private BoardSettings[] levelSettings = new BoardSettings[0];
 
         /// <summary>
         /// The current MatchLevelSettings used to populate the board. 
         /// </summary>
-        public MatchLevelSettings CurrentLevelSettings
+        public BoardSettings CurrentLevelSettings
             => levelSettings[currentLevelSettingsIndex];
 
         /// <summary>
@@ -29,12 +29,12 @@ namespace Bejeweled.UI
         /// </summary>
         public int LevelsCount => levelSettings.Length;
 
-        private MatchBoard board;
+        private Board board;
         private int currentLevelSettingsIndex = 0;
 
         private void Awake()
         {
-            board = FindObjectOfType<MatchBoard>();
+            board = FindObjectOfType<Board>();
             UpdateVisualComponents();
         }
 

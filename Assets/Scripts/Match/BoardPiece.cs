@@ -11,7 +11,7 @@ namespace Bejeweled.Macth
     [DisallowMultipleComponent]
     [RequireComponent(typeof(BoxCollider2D))]
     [RequireComponent(typeof(SpriteRenderer))]
-    public sealed class MatchPiece : MonoBehaviour, IComparable, IEquatable<MatchPiece>
+    public sealed class BoardPiece : MonoBehaviour, IComparable, IEquatable<BoardPiece>
     {
         [SerializeField, Tooltip("The local BoxCollider2D component.")]
         private BoxCollider2D boxCollider;
@@ -33,7 +33,7 @@ namespace Bejeweled.Macth
         /// <summary>
         /// The board this piece belongs to.
         /// </summary>
-        public MatchBoard Board { get; private set; }
+        public Board Board { get; private set; }
 
         /// <summary>
         /// Rendering color for the piece sprite.
@@ -91,7 +91,7 @@ namespace Bejeweled.Macth
         /// </summary>
         /// <param name="other">The other piece to check.</param>
         /// <returns>Whether the other piece is the same.</returns>
-        public bool Equals(MatchPiece other)
+        public bool Equals(BoardPiece other)
         {
             var otherId = other ? other.GetId() : -1;
             return GetId() == otherId;
@@ -100,7 +100,7 @@ namespace Bejeweled.Macth
         /// <summary>
         /// Compares to other instances.
         /// <para>It's useful to sort as list of 
-        /// <see cref="MatchPiece"/> using its points.</para>
+        /// <see cref="BoardPiece"/> using its points.</para>
         /// </summary>
         /// <param name="obj">The other instance to compare.</param>
         /// <returns></returns>
@@ -108,10 +108,10 @@ namespace Bejeweled.Macth
         {
             if (obj == null) return 1;
 
-            var otherPiece = obj as MatchPiece;
+            var otherPiece = obj as BoardPiece;
             if (otherPiece == null)
             {
-                throw new ArgumentException("Object is not a MatchPiece");
+                throw new ArgumentException($"Object is not a {typeof(BoardPiece).Name}");
             }
 
             return CompareUsingHorizontalBoardPosition(otherPiece);
@@ -122,10 +122,10 @@ namespace Bejeweled.Macth
         /// </summary>
         /// <param name="otherPiece">Other piece to compare.</param>
         /// <returns></returns>
-        public int CompareUsingScorePoints(MatchPiece otherPiece)
+        public int CompareUsingScorePoints(BoardPiece otherPiece)
             => scorePoints.CompareTo(otherPiece.GetPoints());
 
-        public int CompareUsingHorizontalBoardPosition(MatchPiece otherPiece)
+        public int CompareUsingHorizontalBoardPosition(BoardPiece otherPiece)
             => BoardPosition.x.CompareTo(otherPiece.BoardPosition.x);
 
         /// <summary>
@@ -186,7 +186,7 @@ namespace Bejeweled.Macth
         /// Sets the board.
         /// </summary>
         /// <param name="board">The board this piece belongs to.</param>
-        internal void SetBoard(MatchBoard board) => Board = board;
+        internal void SetBoard(Board board) => Board = board;
 
         private void UpdateGameObjectName()
             => gameObject.name = $"{BoardPosition}\t{PrefabName}";

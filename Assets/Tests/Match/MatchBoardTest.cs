@@ -4,15 +4,15 @@ using Bejeweled.Macth;
 
 namespace Bejeweled.Tests.Macth
 {
-    public class MatchBoardTest
+    public class BoardTest
     {
-        private MatchBoard board;
-        private MatchLevelSettings levelSettings;
+        private Board board;
+        private BoardSettings levelSettings;
 
         [SetUp]
         public void Setup()
         {
-            CreateLevelSettings();
+            CreateBoardSettings();
             InstanciateBoardPrefab();
         }
 
@@ -24,16 +24,16 @@ namespace Bejeweled.Tests.Macth
         }
 
         [Test]
-        public void WhenResized_BoardSize_ShouldBeTheSameFromLevelSettings()
+        public void WhenResized_BoardSize_ShouldBeTheSameFromItsSettings()
         {
             var actualSize = board.GetSize();
-            var expectedSize = levelSettings.boardSize;
+            var expectedSize = levelSettings.size;
 
             Assert.AreEqual(expectedSize, actualSize);
         }
 
         [Test]
-        public void WhenPopulated_BoardPieceCount_ShouldHasTheSameCountFromLevelSettings()
+        public void WhenPopulated_BoardPieceCount_ShouldHasTheSameCountFromItsSettings()
         {
             var actualPiecesCount = board.PieceManager.PiecesCount;
             var expectedPiecesCount = levelSettings.PiecesCount;
@@ -103,10 +103,10 @@ namespace Bejeweled.Tests.Macth
             TestNonAdjacentPositions(furtherTopRightPosition);
         }
 
-        private void CreateLevelSettings()
+        private void CreateBoardSettings()
         {
-            levelSettings = ScriptableObject.CreateInstance<MatchLevelSettings>();
-            levelSettings.boardSize = Vector2Int.one * 8;
+            levelSettings = ScriptableObject.CreateInstance<BoardSettings>();
+            levelSettings.size = Vector2Int.one * 8;
             levelSettings.pieces = new GameObject[]
             {
                 TestUtility.FindPrefab("BlueGem"),
@@ -121,7 +121,7 @@ namespace Bejeweled.Tests.Macth
         {
             const string prefabName = "MatchBoard";
             var boardPrefab = TestUtility.FindPrefab(prefabName);
-            board = Object.Instantiate(boardPrefab).GetComponent<MatchBoard>();
+            board = Object.Instantiate(boardPrefab).GetComponent<Board>();
         }
     }
 }
