@@ -164,7 +164,7 @@ namespace Bejeweled.Macth
             => transform.DOMove(position, duration: 0.25F);
 
         public YieldInstruction DropDown(Vector2 position)
-            => transform.DOMove(position, duration: 0.1F).WaitForCompletion();
+            => transform.DOMove(position, duration: 0.2F).SetEase(Ease.InOutBounce).WaitForCompletion();
 
         public YieldInstruction ScaleDown()
             => transform.DOScale(0F, duration: 0.15F).WaitForCompletion();
