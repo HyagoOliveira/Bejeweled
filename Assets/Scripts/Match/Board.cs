@@ -383,11 +383,16 @@ namespace Bejeweled.Macth
         private IEnumerator CheckMatchesAndFillBoard(BoardPiece piece)
         {
             DisableSelector();
+            sounds.PlayPieceSwap();
             yield return SwapPieces(SelectedPiece, piece);
 
             var matchedPieces = GetMatchedPieces(out bool wasMatch);
             var revertMove = levelSettings.revertIfNoMatch && !wasMatch;
-            if (revertMove) yield return SwapPieces(piece, SelectedPiece);
+            if (revertMove)
+            {
+                //TODO play revert sound
+                yield return SwapPieces(piece, SelectedPiece);
+            }
             UnselectPiece();
 
             while (wasMatch)
