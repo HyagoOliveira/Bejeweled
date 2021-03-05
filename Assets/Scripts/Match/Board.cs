@@ -36,9 +36,9 @@ namespace Bejeweled.Macth
         public PieceManager PieceManager { get; private set; }
 
         /// <summary>
-        /// Is able to swap pieces in this board?
+        /// Is able to move pieces in this board?
         /// </summary>
-        public bool CanSwapPieces { get; private set; }
+        public bool CanMovePieces { get; private set; }
 
         /// <summary>
         /// The current selected piece at this board.
@@ -237,14 +237,14 @@ namespace Bejeweled.Macth
         }
 
         /// <summary>
-        /// Enables the piece swap.
+        /// Enables the piece movement.
         /// </summary>
-        public void EnablePieceSwap() => CanSwapPieces = true;
+        public void EnablePieceMovement() => CanMovePieces = true;
 
         /// <summary>
-        /// Disable the piece swap.
+        /// Disable the piece movement.
         /// </summary>
-        public void DisablePieceSwap() => CanSwapPieces = false;
+        public void DisablePieceMovement() => CanMovePieces = false;
 
         /// <summary>
         /// Enable the board selector.
@@ -272,7 +272,7 @@ namespace Bejeweled.Macth
         /// <param name="piece">A piece to select.</param>
         public void SelectPiece(BoardPiece piece)
         {
-            if (CanSwapPieces)
+            if (CanMovePieces)
             {
                 if (HasSelectedPiece()) SelectAsSecondPiece(piece);
                 else SelectAsFirstPiece(piece);
@@ -315,7 +315,7 @@ namespace Bejeweled.Macth
         /// <param name="otherPiece">A piece to swap.</param>
         public IEnumerator SwapPieces(BoardPiece piece, BoardPiece otherPiece)
         {
-            DisablePieceSwap();
+            DisablePieceMovement();
             var swapSequence = DOTween.Sequence().
                 Append(piece.Move(otherPiece.transform.position)).
                 Join(otherPiece.Move(piece.transform.position));
@@ -325,7 +325,7 @@ namespace Bejeweled.Macth
             var secondPosition = otherPiece.BoardPosition;
             SetPieceAt(piece.BoardPosition, otherPiece);
             SetPieceAt(secondPosition, piece);
-            EnablePieceSwap();
+            EnablePieceMovement();
         }
 
         /// <summary>
@@ -442,12 +442,12 @@ namespace Bejeweled.Macth
             }
 
             yield return new WaitForSeconds(0.1f);
-            EnablePieceSwap();
+            EnablePieceMovement();
         }
 
         private IEnumerator ComputerMatches(List<BoardPiece> matchedPieces)
         {
-            DisablePieceSwap();
+            DisablePieceMovement();
             var totalScore = 0;
             foreach (var piece in matchedPieces)
             {
@@ -468,7 +468,7 @@ namespace Bejeweled.Macth
 
         private IEnumerator DropDownPieces()
         {
-            DisablePieceSwap();
+            DisablePieceMovement();
             var size = GetSizeAsInt();
 
             for (int y = 1; y < size.y; y++)
@@ -497,7 +497,7 @@ namespace Bejeweled.Macth
 
         private IEnumerator FillEmptySpots(float spawnTime = 0.1F)
         {
-            DisablePieceSwap();
+            DisablePieceMovement();
             var size = GetSizeAsInt();
             var showAnimation = spawnTime > 0F;
             var bottomLeftPosition = GetBottomLeftPosition();
@@ -532,7 +532,7 @@ namespace Bejeweled.Macth
                 }
             }
 
-            EnablePieceSwap();
+            EnablePieceMovement();
         }
 
         private List<BoardPiece> GetMatchedPieces(out bool wasMatch)
