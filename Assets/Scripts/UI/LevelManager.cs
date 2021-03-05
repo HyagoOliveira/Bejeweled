@@ -53,6 +53,8 @@ namespace Bejeweled.UI
         /// </summary>
         public void NextLevel()
         {
+            if (!board.CanMovePieces) return;
+
             currentLevelSettingsIndex++;
             if (currentLevelSettingsIndex >= LevelsCount)
                 currentLevelSettingsIndex = 0;
@@ -66,6 +68,8 @@ namespace Bejeweled.UI
         /// </summary>
         public void PreviousLevel()
         {
+            if (!board.CanMovePieces) return;
+
             currentLevelSettingsIndex--;
             if (currentLevelSettingsIndex < 0)
                 currentLevelSettingsIndex = LevelsCount - 1;
