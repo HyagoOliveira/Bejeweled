@@ -10,11 +10,14 @@ namespace Bejeweled.Macth
     /// Component responsible for creating and managing the Match Board.
     /// </summary>
     [DisallowMultipleComponent]
+    [RequireComponent(typeof(BoardSounds))]
     [RequireComponent(typeof(SpriteRenderer))]
     public sealed class Board : MonoBehaviour
     {
         [SerializeField, Tooltip("The level settings asset.")]
         private BoardSettings levelSettings;
+        [SerializeField, Tooltip("The local BoardSounds component.")]
+        private BoardSounds sounds;
         [SerializeField, Tooltip("The local SpriteRenderer component.")]
         private SpriteRenderer spriteRenderer;
         [SerializeField, Tooltip("The child Transform to hold all the board pieces.")]
@@ -43,6 +46,11 @@ namespace Bejeweled.Macth
         public BoardPiece SelectedPiece { get; private set; }
 
         /// <summary>
+        /// The local BoardSounds component.
+        /// </summary>
+        public BoardSounds Sounds => sounds;
+
+        /// <summary>
         /// Action executed every time a match is done and the score increases.
         /// </summary>
         public Action<int> OnIncreaseScore { get; set; }
@@ -51,6 +59,7 @@ namespace Bejeweled.Macth
         {
             piecesParent = transform.Find("Pieces");
             selector = transform.Find("BoardSelector");
+            sounds = GetComponent<BoardSounds>();
             spriteRenderer = GetComponent<SpriteRenderer>();
         }
 
