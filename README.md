@@ -21,6 +21,9 @@ This is a Unity project for a game inspired by Bejeweled.
 5. When any piece disappears, the pieces above it will fall and new ones will appear from the top of the board, filling all empty spaces;
 6. The pieces swap can be done by mouse Click or Drag.
 
+## Known Bugs
+1. The **Hint** functionality is only working for some patters.
+
 ## Disclaimer
 
 Sprites and Sounds from [Unity Tiny Gems project](https://github.com/Unity-Technologies/ProjectTinySamples/tree/master/TinyGems)
