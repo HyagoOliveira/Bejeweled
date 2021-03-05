@@ -81,7 +81,11 @@ namespace Bejeweled.Macth
         public void HighlightPiece(BoardPiece piece)
         {
             var shouldHighlight = !HasSelectedPiece();
-            if (shouldHighlight) MoveSelectorToPiece(piece);
+            if (shouldHighlight)
+            {
+                Sounds.PlayPieceSelection();
+                MoveSelectorToPiece(piece);
+            }
         }
 
         /// <summary>
