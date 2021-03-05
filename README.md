@@ -17,9 +17,9 @@ This is a Unity project for a game inspired by Bejeweled.
 	- The [BoardSettings ScriptObjects](/Assets/Settings/Boards) will hold this information and populate the board at runtime.
 2. Player can swap vertically or horizontally 2 adjacent pieces;
 3. If the swap results in 3 or more pieces of the same type in adjacent rows or columns, they disappear;
-4. If the swap does not result in any sequence, the pieces return to their previous positions;
-5. When any piece disappears, the pieces above it will fall into place and new ones should appear from the top of the board, filling in the place of the previous ones;
-6. The pieces swap can be through mouse Click or Drag.
+4. If the swap does not result in any match, the pieces should return to their previous positions;
+5. When any piece disappears, the pieces above it will fall and new ones will appear from the top of the board, filling all empty spaces;
+6. The pieces swap can be done by mouse Click or Drag.
 
 ## Disclaimer
 
