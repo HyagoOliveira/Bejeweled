@@ -156,7 +156,6 @@ namespace Bejeweled.Macth
 
         public YieldInstruction Spawn(float duration)
         {
-            Board.Sounds.PlayPieceSpawn();
             transform.localScale = Vector3.one * 2F;
             return transform.DOScale(1F, duration).WaitForCompletion();
         }

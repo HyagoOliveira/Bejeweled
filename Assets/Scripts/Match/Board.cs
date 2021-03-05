@@ -483,7 +483,7 @@ namespace Bejeweled.Macth
 
                     if (showAnimation)
                     {
-                        //TODO play spawn (pop) sound
+                        Sounds.PlayPieceSpawn();
                         yield return currentPiece.Spawn(spawnTime);
                     }
                 }
