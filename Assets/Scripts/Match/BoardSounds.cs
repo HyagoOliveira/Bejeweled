@@ -21,6 +21,8 @@ namespace Bejeweled.Macth
         private AudioClip swapPiece;
         [SerializeField, Tooltip("The AudioClip played when a invalid move is done.")]
         private AudioClip invalidPieceMove;
+        [SerializeField, Tooltip("The AudioClip played when a drop move is done.")]
+        private AudioClip dropPiece;
 
         private void Reset()
         {
@@ -46,5 +48,10 @@ namespace Bejeweled.Macth
         /// Plays the <see cref="invalidPieceMove"/> audio.
         /// </summary>
         public void PlayInvalidPieceMove() => audioSource.PlayOneShot(invalidPieceMove);
+
+        /// <summary>
+        /// Plays the <see cref="dropPiece"/> audio.
+        /// </summary>
+        public void PlayDropPieceMove() => audioSource.PlayOneShot(dropPiece);
     }
 }

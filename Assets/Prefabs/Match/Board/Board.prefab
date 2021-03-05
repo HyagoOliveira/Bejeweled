@@ -57,7 +57,7 @@ Transform:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 7679713463973986977}
-  m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
   m_LocalPosition: {x: 0, y: 0, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children:
@@ -246,8 +246,8 @@ MonoBehaviour:
   selectPiece: {fileID: 8300000, guid: 19bdefef5a8199a47bc303f8e5466786, type: 3}
   spawnPiece: {fileID: 8300000, guid: e4b214e2edd474c438ffc2186e024599, type: 3}
   swapPiece: {fileID: 8300000, guid: 9988422f11b432245b2f24ef9df1122b, type: 3}
-  matchSuccess: {fileID: 8300000, guid: 05d24a355ef642841920693b698f65e5, type: 3}
   invalidPieceMove: {fileID: 8300000, guid: e1dd1e73bb0d4b74ea34b851f4e04276, type: 3}
+  dropPiece: {fileID: 8300000, guid: 0a23ee6f1a5d3e24a9dca8d7d84743f8, type: 3}
 --- !u!1001 &1777465771471425489
 PrefabInstance:
   m_ObjectHideFlags: 0
