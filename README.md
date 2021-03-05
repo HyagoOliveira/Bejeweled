@@ -26,11 +26,11 @@ This is a Unity project for a game inspired by Bejeweled.
 ![Gameplay](/Documentation/bejeweled-swapping-pieces.gif)
 
 ## Known Bugs
-1. The **Hint** functionality is only working for some patters.
+1. The **Hint** functionality is only working for some patterns.
 
 ## Disclaimer
 
-Sprites and Sounds from [Unity Tiny Gems project](https://github.com/Unity-Technologies/ProjectTinySamples/tree/master/TinyGems)
+Sprites and Audio Clips from [Unity Tiny Gems project](https://github.com/Unity-Technologies/ProjectTinySamples/tree/master/TinyGems)
 
 ---
 
