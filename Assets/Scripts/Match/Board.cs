@@ -608,9 +608,7 @@ namespace Bejeweled.Macth
                     var invalidPieceIds = new int[]
                     {
                         GetPieceIdAt(x - 1, y), // Gets the closest left piece id from the current position.
-                        GetPieceIdAt(x - 2, y), // Gets the further left piece id from the current position.
                         GetPieceIdAt(x, y - 1), // Gets the closest bottom piece id from the current position.
-                        GetPieceIdAt(x, y - 2)  // Gets the further bottom piece id from the current position.
                     };
 
                     var currentPiece = PieceFactory.InstantiateRandomPieceWithoutIds(piecesParent, invalidPieceIds);
