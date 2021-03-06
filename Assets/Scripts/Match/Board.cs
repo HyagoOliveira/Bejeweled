@@ -101,7 +101,6 @@ namespace Bejeweled.Macth
             }
         }
 
-
         /// <summary>
         /// Removes all <see cref="BoardPiece"/> GameObjects from this board.
         /// </summary>
@@ -243,6 +242,12 @@ namespace Bejeweled.Macth
                         IsSamePiece(piece, piece.BoardPosition + new Vector2Int(1, -1)) &&
                         IsSamePiece(piece, piece.BoardPosition + new Vector2Int(-1, -1));
                     if (canBottomMatch) return piece;
+
+                    var canCenterMatch = rightPieces[0] &&
+                        IsSamePiece(rightPieces[0], piece.BoardPosition + Vector2Int.up) &&  // top piece
+                        IsSamePiece(rightPieces[0], piece.BoardPosition + Vector2Int.left);  // left piece
+
+                    if (canCenterMatch) return piece;
                 }
             }
 
