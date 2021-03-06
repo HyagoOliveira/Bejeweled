@@ -22,4 +22,4 @@ MonoBehaviour:
   totalScore: 80
   populateSpawnTime: 0.06
   revertIfNoMatch: 0
-  fillEmptySpots: 0
+  fillEmptySpots: 1

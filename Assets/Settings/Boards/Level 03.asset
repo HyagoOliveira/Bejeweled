@@ -19,5 +19,5 @@ MonoBehaviour:
   - {fileID: 1620213370813087482, guid: 199f21a483c53be43baa649661df6fd0, type: 3}
   totalScore: 60
   populateSpawnTime: 0.06
-  revertIfNoMatch: 1
-  fillEmptySpots: 1
+  revertIfNoMatch: 0
+  fillEmptySpots: 0
