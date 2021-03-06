@@ -1,10 +1,10 @@
 # Bejeweled
 
-This is a Unity project for a game inspired by Bejeweled.
+This is a Unity project for a game inspired by Bejeweled. You can play a WebGL build [here](https://simmer.io/@hyagogow/bejeweled#.YELHb50NQ6s.link).
 
 * Unity version: **2019.4**
 * Current version: **0.1.0**
-* [Class Diagram ](https://drive.google.com/file/d/1u3dMu-TQH_jV4uT2XrP4JqLsSN9waI-Y/view?usp=sharing)
+* [Class Diagram](https://drive.google.com/file/d/1u3dMu-TQH_jV4uT2XrP4JqLsSN9waI-Y/view?usp=sharing)
 
 ![Starting the game](/Documentation/bejeweled-start-board.gif)
 
