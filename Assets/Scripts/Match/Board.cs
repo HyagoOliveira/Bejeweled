@@ -243,17 +243,26 @@ namespace Bejeweled.Macth
                         IsSamePiece(piece, piece.BoardPosition + new Vector2Int(-1, -1));
                     if (canBottomMatch) return piece;
 
-                    var canCenterMatch = rightPieces[0] &&
-                        IsSamePiece(rightPieces[0], piece.BoardPosition + Vector2Int.up) &&  // top piece
-                        IsSamePiece(rightPieces[0], piece.BoardPosition + Vector2Int.left);  // left piece
+                    var canCenterHorzMatch = rightPieces[0] &&
+                        IsSamePiece(rightPieces[0], piece.BoardPosition + Vector2Int.left) &&
+                        (
+                            IsSamePiece(rightPieces[0], piece.BoardPosition + Vector2Int.up) ||
+                            IsSamePiece(rightPieces[0], piece.BoardPosition + Vector2Int.down)
+                        );
+                    if (canCenterHorzMatch) return piece;
 
-                    if (canCenterMatch) return piece;
+                    var canCenterVertMatch = bottomPieces[0] &&
+                        IsSamePiece(bottomPieces[0], piece.BoardPosition + Vector2Int.up) &&
+                        (
+                            IsSamePiece(bottomPieces[0], piece.BoardPosition + Vector2Int.left) ||
+                            IsSamePiece(bottomPieces[0], piece.BoardPosition + Vector2Int.right)
+                        );
+                    if (canCenterVertMatch) return piece;
                 }
             }
 
             return null;
         }
-
 
         /// <summary>
         /// Get a list of pieces from the given position and direction.
