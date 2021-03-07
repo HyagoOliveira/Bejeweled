@@ -1,0 +1,23 @@
+Um jogo de Match 3 consiste de uma matriz de nodes com dimenções W x H.
+
+1. Nodes: o item que sofrerá o matching. A gema do jogo.
+2. Tiles: o local onde os nodes ficam. In a matrix of W x H, each tile is representable by a number from 0 to (W - 1 x H - 1).
+3. Matches: The matching of M until the directional size (generally 3 for match 3 games):
+    3.1. M until (W - 1) for horizontal maches;
+    3.2. M until (H - 1) for vertical matches;
+4. No diagonal matches are allowed.
+
+How to detect matches
+
+1. Every match (vertical or horizontal) is detected at the node located at the smallest nth of tile.
+2. To detect the vertical matches, we only need to scan the nodes which are from the row 0th to (W - X).
+3. To detect the horizontal matches, we only need to scan the nodes which are from the column 0th to 5th.
+
+for(y = 0 to H - X)
+{
+    for(x = 0 to W - X)
+    {
+        isHorizontalMatch = node[x, y] == node[x + 1 ,y] == node[x + 2 ,y] .. until X
+        isVerticalMatch = node[x, y] == node[x, y + 1] == node[x, y + 2] .. until X
+    }
+}
