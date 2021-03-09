@@ -6,6 +6,10 @@ and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.
 
 ## [Unreleased]
 
+### Added
+- TiledSprite component
+- LoadScene attribute
+
 ### Changed
 - Fix populating board
 - Improve hint system
