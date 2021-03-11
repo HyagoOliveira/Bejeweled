@@ -107,6 +107,7 @@ namespace Bejeweled.Tests.Macth
         {
             levelSettings = ScriptableObject.CreateInstance<BoardSettings>();
             levelSettings.size = Vector2Int.one * 8;
+            levelSettings.populateSpawnTime = 0f;
             levelSettings.pieces = new GameObject[]
             {
                 TestUtility.FindPrefab("BlueGem"),
@@ -122,6 +123,7 @@ namespace Bejeweled.Tests.Macth
             const string prefabName = "Board";
             var boardPrefab = TestUtility.FindPrefab(prefabName);
             board = Object.Instantiate(boardPrefab).GetComponent<Board>();
+            board.Populate(levelSettings);
         }
     }
 }

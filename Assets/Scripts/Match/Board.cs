@@ -101,7 +101,6 @@ namespace Bejeweled.Macth
             }
         }
 
-
         /// <summary>
         /// Removes all <see cref="BoardPiece"/> GameObjects from this board.
         /// </summary>
@@ -243,12 +242,27 @@ namespace Bejeweled.Macth
                         IsSamePiece(piece, piece.BoardPosition + new Vector2Int(1, -1)) &&
                         IsSamePiece(piece, piece.BoardPosition + new Vector2Int(-1, -1));
                     if (canBottomMatch) return piece;
+
+                    var canCenterHorzMatch = rightPieces[0] &&
+                        IsSamePiece(rightPieces[0], piece.BoardPosition + Vector2Int.left) &&
+                        (
+                            IsSamePiece(rightPieces[0], piece.BoardPosition + Vector2Int.up) ||
+                            IsSamePiece(rightPieces[0], piece.BoardPosition + Vector2Int.down)
+                        );
+                    if (canCenterHorzMatch) return piece;
+
+                    var canCenterVertMatch = bottomPieces[0] &&
+                        IsSamePiece(bottomPieces[0], piece.BoardPosition + Vector2Int.up) &&
+                        (
+                            IsSamePiece(bottomPieces[0], piece.BoardPosition + Vector2Int.left) ||
+                            IsSamePiece(bottomPieces[0], piece.BoardPosition + Vector2Int.right)
+                        );
+                    if (canCenterVertMatch) return piece;
                 }
             }
 
             return null;
         }
-
 
         /// <summary>
         /// Get a list of pieces from the given position and direction.
@@ -603,9 +617,7 @@ namespace Bejeweled.Macth
                     var invalidPieceIds = new int[]
                     {
                         GetPieceIdAt(x - 1, y), // Gets the closest left piece id from the current position.
-                        GetPieceIdAt(x - 2, y), // Gets the further left piece id from the current position.
                         GetPieceIdAt(x, y - 1), // Gets the closest bottom piece id from the current position.
-                        GetPieceIdAt(x, y - 2)  // Gets the further bottom piece id from the current position.
                     };
 
                     var currentPiece = PieceFactory.InstantiateRandomPieceWithoutIds(piecesParent, invalidPieceIds);
