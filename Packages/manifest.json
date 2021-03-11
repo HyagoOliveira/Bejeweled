@@ -1,6 +1,7 @@
 {
   "dependencies": {
     "com.actioncode.scene-management": "1.0.1",
+    "com.actioncode.script-generator": "1.0.0",
     "com.demigiant.dotween": "1.2.42",
     "com.unity.2d.animation": "3.2.6",
     "com.unity.2d.pixel-perfect": "2.1.0",
